@@ -2,11 +2,8 @@
 
 ## INTRODUCTION
 
-```bash
-Dans un premier temps, cette environement a été utilisé avec un smarthphone de type samsung galaxy S9+. Le senseur magnetique utilisé est "Magnetic Sensor, 1209-002401".
-L'application devra permettre dans un premier temps a l'utilsateur de connaitre et visualisé a l'aide d'outils les appereils environant et ce geographiquement.
-Par la suite nous chercherons a determiner la nature de ces ondes et le spectre de définition associé a celle-ci.
-Et seulement ensuite nous verrons ce que nous trouvons a faire d'interressant.
-```
+First, I will introduce the working environment by talking about hardware constraints.
+The recordings were made with a Samsung Galaxy S9+ using a magnetometer model "Magnetic Sensor, 1209-002401". The sensor expresses a magnetic field vector of format B(x,y,z) expressed in uT. For the moment I have no more information to bring you.
+The objective from an application point of view is to get the most information from this signal. For that a file describing the signal is provided whose dataset can be improved if needed.
 
 
