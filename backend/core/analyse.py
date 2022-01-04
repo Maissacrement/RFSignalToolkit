@@ -145,6 +145,9 @@ class Analyse:
 
 
 """
+# Remove comment at top and bottom if you want try.
+# 
+
 # Define dataset
 df=[{}] # magnet data
 
