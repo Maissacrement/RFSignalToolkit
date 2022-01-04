@@ -146,7 +146,6 @@ class Analyse:
 
 """
 # Remove comment at top and bottom if you want try.
-# 
 
 # Define dataset
 df=[{"magnet": "[-35.88, -62.52, 77.04, -31.619999, -111.24, 105.78]", "createdAtNs": "8274324561851", "initialTime": "10811745345305"}] # magnet data
