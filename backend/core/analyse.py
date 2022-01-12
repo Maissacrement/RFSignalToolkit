@@ -5,6 +5,13 @@ import pandas as pd
 import json
 import matplotlib.pyplot as plt
 
+
+"""
+    Analyse() is python Class used magnet field area to
+    transform it into oem signal wave. OEM contains area
+    network wifi, bleutooth, gsm, 4g, 3gpp, rf, other 
+    communication device.
+"""
 class Analyse:
     def __init__(self):
         self.signal = []
@@ -133,25 +140,17 @@ class Analyse:
 
 
 """
+# Remove comment at top and bottom if you want try.
+
+# Define dataset
+df=[{"magnet": "[-35.88, -62.52, 77.04, -31.619999, -111.24, 105.78]", "createdAtNs": "8274324561851", "initialTime": "10811745345305"}] # magnet data
+
+# Instanciated CLass
 analyse=Analyse()
-# analyse.f(amplitude[0], 1, 2)
-#Now you need to provide here dataset with 'self.provideDataset'
-a=analyse.getMagneticFieldNormal() # update csv row
-#print(analyse.secondLength)
-sig=analyse.getSignalFrom(a, analyse.secondLength, 5.2*2* (10**6))
-signal=sig.get('signal')
-freq=sig.get('frequency')
 
-# sginal=analyse.filteredFreq(signal, freq, fe, 100000)
-Fe=5.2* (10**6)
+# Provide dataset
+analyse.provideDataset(False, df) # First arg is csv name location, seconde arg is Array of Object
 
-sig=analyse.filteredFreq(a, freq, Fe, 100000) + analyse.filteredFreq(signal, freq, Fe*2, 100000) + analyse.filteredFreq(signal, freq, Fe*3, 100000)
-
-sig=analyse.signalToDict( sig )
-signal=sig.get('signal')
-freq=sig.get('frequency')
-
-print( signal )
-
-print(analyse.changeFrequency())
+# Get Signal at Specified frequencies in Mhz
+print(analyse.changeFrequency(60000)) # 60 Ghz
 """
