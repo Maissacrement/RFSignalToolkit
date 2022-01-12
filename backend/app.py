@@ -1,17 +1,19 @@
 #!/usr/bin/env python3
+from flask_cors import CORS,cross_origin
+from flask import Flask, Response, request
+
 from core.analyse import Analyse
 from core.can import CAN
 from core.udpAnalyser import UdPAnalyser
-from flask import Flask, Response, request
 import matplotlib.pyplot as plt
 from function.math1 import instanceSineWave
 from function.dataframes import magnet, convertToMagnet
 import struct
 import json
-from flask_cors import CORS,cross_origin
 import os
 import numpy as np
 import function.packetReader as packet
+import os
 
 
 app = Flask(__name__)
@@ -29,29 +31,47 @@ def dyns():
     df=convertToMagnet(request.get_json())
     analyse.provideDataset(False, df)
     sig=[]
+    app=[]
+    same=[]
 
-    for i in range(700, 720):
+    for i in range(2500000000000, 2700000000000, 100000000):
         signal = analyse.changeFrequency(i)
+        #signal=signal if signal not in same else None
         if signal:
+            #same.append(signal)
             numericalAnalysis=CAN()
-            signal=[numericalAnalysis.can(15, signal[1].real), numericalAnalysis.can(15, signal[1].imag)]
+            signal=[numericalAnalysis.can(15, signal[1][1:].real), numericalAnalysis.can(15, signal[1][1:].imag)]
             fmt= "! 8s 8s"
             size = struct.calcsize(fmt)
 
             udp=UdPAnalyser()
-            print(signal[0])
             s=numericalAnalysis.qbits(signal[0])
             frame=udp.dump(s, fmt, size)
-            if(frame): print(str(i), " MHZ")
-            sig.append({ "state": "found", "frame": frame, "frequency": str(i) + " GHZ" })
-            
-            print(s)
-            #packet.hexToUri(s)
+            if(frame not in sig):
+                print(i)
+                sig.append(frame)
+                p=''.join(s)
+                print(p)
+                os.system('./packetExtractor/script.sh {} > ./debug.json'.format(p))
+                if os.path.getsize("./debug.json"):
+                    with open('./debug.json', 'r') as debug:
+                        # if(debug.read() != "" and debug.read() != "[]"):
+                        app.append( json.loads(debug.read()) )
+                        print(json.dumps(app, indent=4))
 
-        else: 
-            return json.dumps(sig)
+                dumpShiftedLeft=[ ''.join([ hex(int(p[x:x+2], 16) ^ i)[2:] for x in range(int(len(p) / 2)) ]) for i in range(255) ]
+                for dt in dumpShiftedLeft:
+                    os.system('./packetExtractor/script.sh {} > ./debug.json'.format(dt))
+                    if os.path.getsize("./debug.json"):
+                        with open('./debug.json', 'r') as debug:
+                            # if(debug.read() != "" and debug.read() != "[]"):
+                            app.append( json.loads(debug.read()) )
+                            print(json.dumps(app, indent=4))
 
-    return json.dumps({ "state": "null" })
+    if len(app) > 0: 
+        return json.dumps({ "frame": app })
+    else:
+        return json.dumps({ "state": "null" })
 
 @app.route('/magnet', methods=['POST'])
 def push():

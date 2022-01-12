@@ -119,21 +119,16 @@ class Analyse:
     """
     def changeFrequency(self, Fm=60): # 5.0 mhz
         pound={ "khz": (10**3), "mhz": (10**6), "ghz": (10**9) }
-        Fm=Fm*pound['mhz']
+        Fm=Fm #*pound['khz']
         B=self.getMagneticFieldNormal()
         sig=self.getSignalFrom(B, Fm)
         if type(sig["signal"]) != type(None):
             signal=sig.get('signal')
             freq=sig.get('frequency')
-            Fe=(Fm / 2)
-            scope=Fe / 20
-            sig=self.filteredFreq(signal, freq, Fe, scope) + self.filteredFreq(signal, freq, Fe*2, scope)
-            if sig: 
-                sig=self.signalToDict( sig )
-                signal=sig.get('signal')
-                freq=sig.get('frequency')
+            #f0=max(signal[1:])
+            #n=np.where(signal == f0)[0][0]
 
-                return [ freq, signal ]
+            return [ freq, signal ]
         return None
 
 

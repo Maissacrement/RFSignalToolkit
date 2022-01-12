@@ -9,7 +9,7 @@ class CAN:
         Arrondi 
     """
     def r0(self, number):
-        return ceil(number) if number > int(number) + .5 and int(number) < 15 else floor(number)
+        return ceil(number) if number > int(number) + .75 and int(number) < 15 else floor(number)
 
     """
         Convertisseur analogique to numerique (Y)
