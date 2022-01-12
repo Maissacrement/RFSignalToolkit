@@ -1,4 +1,4 @@
-# Android toolkit audit and prevent attack from oem (CPU, DISK, Wi-fi, Bluetooth, radar, radio frequency)
+# Android toolkit audit and prevent attack from oem (CPU, DISK, Wi-fi, Bluetooth, radar, radio frequency, ...)
 
 ## INTRODUCTION
 
