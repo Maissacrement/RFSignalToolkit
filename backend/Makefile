@@ -15,4 +15,4 @@ build:
 start:
 	${DOCKER} run --env-file ${env} -p ${PORT}:${PORT} -it ${APP_NAME}
 
-${APP_NAME}: login build start
+${APP_NAME}: build start
