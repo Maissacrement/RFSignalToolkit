@@ -1,8 +1,6 @@
 import re
 import os
 
-import requests
-
 hexToUri=lambda uri: '+'.join([ uri[i:i+2] for i in range(0, len(uri), 2) ])
 
 curl=lambda hex: str(os.system("curl 'http://eon.sadjad.org/phd/' \
