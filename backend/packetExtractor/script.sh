@@ -8,11 +8,15 @@ function main () {
     echo $@ | xxd -p -r | hexdump -C >> ./${file}.txt 2>/dev/null
     text2pcap ./${file}.txt ./${file}.pcap 2>/dev/null && rm -vf ./${file}.txt &>/dev/null
     dump=`tshark -r ./${file}.pcap -V | jq  --raw-input .`
+    #echo ${dump} | jq --slurp .
+    echo ${dump} | jq --slurp . >> ./dump.json # Temp data for debug
     if [ 0 -ne `echo ${dump} | grep -v 'Protocols in frame: eth:ethertype:data' | wc -l` ];
     then
-        echo ${dump} | jq --slurp . 
+        echo create ./${file}.pcap
+        echo ${dump} | jq --slurp . > ./debug.json
     else
         rm -vf ./${file}.pcap &>/dev/null
+        echo "rm"
     fi
 }
 

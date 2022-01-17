@@ -1,14 +1,22 @@
 #!/bin/bash
 
 function runTest() {
-    curl http://172.17.0.2:5000/magnet \
+    curl http://0.0.0.0:5000/magnet \
         -X POST -H 'content-type: application/json' \
         -H 'Accept: application/json' \
     --data "[{\"magnet\": \"[-35.88, -62.52, 77.04, -31.619999, -111.24, 105.78]\", \"createdAtNs\": \"8274324561851\", \"initialTime\": \"10811745345305\"}]"
 }
 
+function runMouseDataTest() {
+    curl http://0.0.0.0:5000/dynmagnet \
+        -X POST -H 'content-type: application/json' \
+        -H 'Accept: application/json' \
+    --data @./mouse.json
+}
+
 function main() {
     runTest
+    runMouseDataTest
 }
 
 main

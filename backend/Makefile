@@ -9,6 +9,10 @@ include $(env)
 login:
 	${DOCKER} login
 
+app:
+	python3 app.py &>/dev/null &
+	tail -f ./debug.json
+
 build:
 	${DOCKER} build -t ${APP_NAME} .
 

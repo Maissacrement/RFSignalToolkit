@@ -14,6 +14,7 @@ import os
 import numpy as np
 import function.packetReader as packet
 import os
+import pandas as pd
 
 
 app = Flask(__name__)
@@ -21,24 +22,25 @@ CORS(app, support_credentials=True)
 
 @app.route('/dynmagnet', methods=['POST', 'GET'])
 def dyns():
-    import pandas as pd
-
     df = pd.DataFrame({})
     analyse = Analyse()
     signal = None
     i = 1
 
-    df=convertToMagnet(request.get_json())
+    df=convertToMagnet(request.get_json() * 50)
     analyse.provideDataset(False, df)
     sig=[]
     app=[]
-    same=[]
+    same=[0]
 
-    for i in range(2500000000000, 2700000000000, 100000000):
+    # Search from frequency range 1000000000 hertz to 900000000000 hertz
+    for i in range(1000000000, 900000000000, 3000000000):
         signal = analyse.changeFrequency(i)
         #signal=signal if signal not in same else None
         if signal:
-            #same.append(signal)
+            print(len(signal[0]))
+            # and (signal not in same)
+            # same.append(signal)
             numericalAnalysis=CAN()
             signal=[numericalAnalysis.can(15, signal[1][1:].real), numericalAnalysis.can(15, signal[1][1:].imag)]
             fmt= "! 8s 8s"
@@ -48,20 +50,20 @@ def dyns():
             s=numericalAnalysis.qbits(signal[0])
             frame=udp.dump(s, fmt, size)
             if(frame not in sig):
-                print(i)
                 sig.append(frame)
                 p=''.join(s)
-                print(p)
-                os.system('./packetExtractor/script.sh {} > ./debug.json'.format(p))
-                if os.path.getsize("./debug.json"):
-                    with open('./debug.json', 'r') as debug:
-                        # if(debug.read() != "" and debug.read() != "[]"):
-                        app.append( json.loads(debug.read()) )
-                        print(json.dumps(app, indent=4))
-
-                dumpShiftedLeft=[ ''.join([ hex(int(p[x:x+2], 16) ^ i)[2:] for x in range(int(len(p) / 2)) ]) for i in range(255) ]
+                dumpShiftedLeft=[p] +[ ''.join([ hex(int(p[x:x+2], 16) ^ i)[2:] for x in range(int(len(p) / 2)) ]) for i in range(255) ]
+                #print(p)
+                print(dumpShiftedLeft)
+                #os.system('./packetExtractor/script.sh {} > ./debug.json'.format(p))
+                #if os.path.getsize("./debug.json"):
+                #    with open('./debug.json', 'r') as debug:
+                #        # if(debug.read() != "" and debug.read() != "[]"):
+                #        app.append( json.loads(debug.read()) )
+                #        print(json.dumps(app, indent=4))
+                #dumpShiftedLeft=[ ''.join([ hex(int(p[x:x+2], 16) ^ i)[2:] for x in range(int(len(p) / 2)) ]) for i in range(255) ]
                 for dt in dumpShiftedLeft:
-                    os.system('./packetExtractor/script.sh {} > ./debug.json'.format(dt))
+                    os.system('./packetExtractor/script.sh {}'.format(dt))
                     if os.path.getsize("./debug.json"):
                         with open('./debug.json', 'r') as debug:
                             # if(debug.read() != "" and debug.read() != "[]"):
