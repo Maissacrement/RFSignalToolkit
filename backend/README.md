@@ -2,6 +2,12 @@
 
 ## Welcom in Radio Sniffer Backend Tool
 
+### How to curl
+
+```bash
+./backend/unit
+```
+
 
 ### How to install
 
