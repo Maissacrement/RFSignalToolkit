@@ -89,13 +89,13 @@ class Analyse:
         Champ magnetic normalisé
     """
     def getMagneticFieldNormal(self):
-        magnet = [ x if type(x) == list else json.loads(x) for x in self.dataset['magnet'].values  ]
+        magnet = [ x if type(x) == list else json.loads(x) for x in self.dataset['magnet']  ]
 
         self.start_time=int(self.dataset["time"][1])
         end_time=int(self.dataset["time"][-1])
         self.secondLength = end_time - self.start_time
         
-        return [ np.absolute(magnet[(x*3)][0] + magnet[(x*3)][0] + magnet[(x*3)][0]) * (10**-9) for x in range(int(len(magnet)/3))]
+        return [ np.sqrt(np.absolute(magnet[(x*3)][0]**2 + magnet[(x*3)][0]**2 + magnet[(x*3)][0]**2)) * (10**-9) for x in range(int(len(magnet)/3))]
 
 
     """
@@ -126,7 +126,7 @@ class Analyse:
     """
     def changeFrequency(self, Fm=60): # 5.0 mhz
         pound={ "khz": (10**3), "mhz": (10**6), "ghz": (10**9) }
-        Fm=Fm #*pound['khz']
+        Fm=Fm*pound['mhz']
         B=self.getMagneticFieldNormal()
         sig=self.getSignalFrom(B, Fm)
         if type(sig["signal"]) != type(None):
