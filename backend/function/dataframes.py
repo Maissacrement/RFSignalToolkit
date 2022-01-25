@@ -9,7 +9,7 @@ def convertToMagnet(d):
     d=list(d) * 3
     for r in range(0, int(len(d)/3)):
         m=dict(d[r*3])
-        m['magnet']=list(eval(d[r*3]['magnet']))
+        m['magnet']=json.loads(d[r*3]['magnet'])
         m['magnet']=[[m['magnet'][i], m['magnet'][i+2]] for i in range(int(len(m['magnet']) / 2)) ]
         m['time']=(float(m['createdAtNs']) - float(m['initialTime'])) / 1000000000
         d[r*3]=m

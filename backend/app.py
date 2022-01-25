@@ -15,13 +15,22 @@ import numpy as np
 import function.packetReader as packet
 import os
 import pandas as pd
+import sys
+import subprocess
 
 def extractor(dumplist):
-    for dt in dumplist:
-        os.system('./packetExtractor/script.sh {}'.format(dt))
-        if os.path.getsize("./debug.json"):
-            with open('./debug.json', 'rb') as debug:
-                yield bytes(debug.read())
+    try:
+        for i, dt in enumerate(dumplist):
+            packet=subprocess.run(["./packetExtractor/script.sh", str(dt)], capture_output=True)
+            if packet.returncode == 0 and len(packet.stdout) != 0:
+                print(packet.stdout)
+                yield packet.stdout
+            #os.system('./packetExtractor/script.sh {}'.format(dt))
+            #if os.path.getsize("./debug.json"):
+            #    with open('./debug.json', 'rb') as debug:
+            #        yield debug.read()
+    finally:
+        print("End")
                 
 
 app = Flask(__name__)
@@ -35,24 +44,21 @@ def dyns():
     signal = None
     dumpShiftedLeft=[]
     i = 2400
-
     df=convertToMagnet(request.get_json() * 50)
     
     sig=[]
-    app=[]
 
     # Search from frequency range 1000000000 hertz to 900000000000 hertz
     cut=int(len(df)/MTU)
     for j in range(cut):
         analyse.provideDataset(False, df[j:]) if len(df[j:]) < MTU else analyse.provideDataset(False, df[j:j+MTU])
-        #for i in range(60000, 94000, 1000):
-        signal = analyse.changeFrequency(60000)
+        signal = analyse.changeFrequency( int(sys.argv[1]) )
         if signal:
             numericalAnalysis=CAN()
             s=numericalAnalysis.qbits(numericalAnalysis.can(15, signal[1][1:].real))
             if(s not in sig):
-                sig.append(s)
                 p=''.join(s)
+                sig.append(p)
                 dumpShiftedLeft+=[p] +[ ''.join([ hex(int(p[x:x+2], 16) ^ i)[2:] for x in range(int(len(p) / 2)) ]) for i in range(127) ]
 
     return Response(extractor(dumpShiftedLeft), mimetype="application/json")
@@ -80,4 +86,4 @@ def push():
     })
 
 if __name__ == "__main__":
-    app.run(debug=True, use_reloader=True, host="0.0.0.0")
+    app.run(debug=True, use_reloader=True, host="192.168.1.119")
