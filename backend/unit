@@ -15,7 +15,7 @@ function runMouseDataTest() {
 }
 
 function main() {
-    runTest
+    #runTest
     runMouseDataTest
 }
 

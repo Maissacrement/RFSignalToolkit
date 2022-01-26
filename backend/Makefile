@@ -23,4 +23,4 @@ reload:
 	${DOCKER} run --env-file ${env} -v ${PWD}:/app -p ${PORT}:${PORT} -it ${APP_NAME}
 
 ${APP_NAME}: build start
-${APP_NAME}_DEV: build reload
+${APP_NAME}_dev: build reload

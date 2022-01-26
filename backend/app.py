@@ -21,8 +21,10 @@ import subprocess
 def extractor(dumplist):
     print('searching..')
     try:
+        print(dumplist)
+        dumplist=[ *filter(lambda x: len(x.strip()) != 0, dumplist) ]
         for i, dt in enumerate(dumplist):
-            packet=subprocess.run(["./packetExtractor/script.sh", str(dt)], capture_output=True)
+            packet=subprocess.run(["{}/packetExtractor/script.sh".format(os.getcwd()), str(dt)], capture_output=True)
             if packet.returncode == 0 and len(packet.stdout) != 0:
                 print(packet.stdout)
                 yield packet.stdout
@@ -58,7 +60,9 @@ def dyns():
     cut=int(len(df)/MTU)
     for j in range(cut):
         analyse.provideDataset(False, df[j:]) if len(df[j:]) < MTU else analyse.provideDataset(False, df[j:j+MTU])
+        #analyse.provideDataset(False, df[0:])
         signal = analyse.changeFrequency( FREQUENCY )
+        print(signal)
         if signal:
             numericalAnalysis=CAN()
             s=numericalAnalysis.qbits(numericalAnalysis.can(15, signal[1][1:].real))

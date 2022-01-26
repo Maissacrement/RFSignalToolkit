@@ -24,4 +24,9 @@ function main () {
     if [ 0 -ne `echo ${dump} | grep -vw "\"frame.protocols\":\s\"\(eth\|eth:ethertype:data\|eth:llc:data\)\"" | wc -l` ];then    echo "[${dump}]\n...";fi
 }
 
-main $@
+if [ -z "$@" ];
+then
+    exit 0;
+else
+    main $@
+fi

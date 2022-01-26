@@ -51,11 +51,11 @@ class Analyse:
         for i in range(self.secondLength):
             omegaN=len(self.getSetBySecond(i+1))
             if(i!=0):
-                [ signal.append(self.f(a, i, omegaN)) for a in A[p:p+omegaN]]
+                [ signal.append(self.f(a, i, omegaN) + np.cos( 2*np.pi*fe*i )) for a in A[p:p+omegaN]]
                 p+=omegaN
 
         return {
-            "signal": np.fft.fft(np.abs(signal)) if len(signal) else None,
+            "signal": np.fft.fft( np.abs(signal) ) if len(signal) else None,
             "frequency": fftfreq(len(signal), d=1/fe) if len(signal) else None,
             "pure": np.abs(signal)
         }
@@ -133,18 +133,18 @@ class Analyse:
         if type(sig["signal"]) != type(None):
             signal=sig.get('signal')
             freq=sig.get('frequency')
-            Fe=(Fm / 2)
-            scope=Fe / 20
-            sig=self.filteredFreq(signal, freq, Fe, scope)
+            #Fe=(Fm / 2)
+            #scope=Fe / 20
+            #sig=self.filteredFreq(signal, freq, Fe, scope)
             #self.plotSignal(self, Fm, signal)
-            if sig:
-                sig=self.signalToDict( sig )
-                signal=sig.get('signal')
-                freq=sig.get('frequency')
+            #if sig:
+            #    sig=self.signalToDict( sig )
+            #    signal=sig.get('signal')
+            #    freq=sig.get('frequency')
                 #f0=max(signal[1:])
                 #n=np.where(signal == f0)[0][0]
 
-                return [ freq, signal ]
+            return [ freq, signal ]
 
         return None
 
