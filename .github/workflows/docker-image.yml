@@ -16,4 +16,5 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build the Docker image CI
       run: |
-        make radio
+        cd ./backend
+        make build
