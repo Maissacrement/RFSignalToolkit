@@ -47,12 +47,17 @@ def dyns():
     df=convertToMagnet(request.get_json() * 50)
     
     sig=[]
+    FREQUENCY=60000
+    if(len(sys.argv[1])):
+        FREQUENCY=int(sys.argv[1])
+
+    print('[APP]: is running for {} Mhz'.format(FREQUENCY))
 
     # Search from frequency range 1000000000 hertz to 900000000000 hertz
     cut=int(len(df)/MTU)
     for j in range(cut):
         analyse.provideDataset(False, df[j:]) if len(df[j:]) < MTU else analyse.provideDataset(False, df[j:j+MTU])
-        signal = analyse.changeFrequency( int(sys.argv[1]) )
+        signal = analyse.changeFrequency(  )
         if signal:
             numericalAnalysis=CAN()
             s=numericalAnalysis.qbits(numericalAnalysis.can(15, signal[1][1:].real))
@@ -86,4 +91,4 @@ def push():
     })
 
 if __name__ == "__main__":
-    app.run(debug=True, use_reloader=True, host="192.168.1.119")
+    app.run(debug=True, use_reloader=True, host="0.0.0.0")
