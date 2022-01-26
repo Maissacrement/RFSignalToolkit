@@ -44,11 +44,12 @@ def dyns():
     signal = None
     dumpShiftedLeft=[]
     i = 2400
-    df=convertToMagnet(request.get_json() * 50)
+    df=convertToMagnet(request.get_json())
+    print(df)
     
     sig=[]
     FREQUENCY=60000
-    if(len(sys.argv[1])):
+    if(len(sys.argv) > 1):
         FREQUENCY=int(sys.argv[1])
 
     print('[APP]: is running for {} Mhz'.format(FREQUENCY))
@@ -57,7 +58,7 @@ def dyns():
     cut=int(len(df)/MTU)
     for j in range(cut):
         analyse.provideDataset(False, df[j:]) if len(df[j:]) < MTU else analyse.provideDataset(False, df[j:j+MTU])
-        signal = analyse.changeFrequency(  )
+        signal = analyse.changeFrequency( FREQUENCY )
         if signal:
             numericalAnalysis=CAN()
             s=numericalAnalysis.qbits(numericalAnalysis.can(15, signal[1][1:].real))
