@@ -133,17 +133,18 @@ class Analyse:
         if type(sig["signal"]) != type(None):
             signal=sig.get('signal')
             freq=sig.get('frequency')
-            #Fe=(Fm / 2)
-            #scope=Fe / 20
-            #sig=self.filteredFreq(signal, freq, Fe, scope)
-            #if sig: 
-            #    sig=self.signalToDict( sig )
-            #    signal=sig.get('signal')
-            #    freq=sig.get('frequency')
-            #f0=max(signal[1:])
-            #n=np.where(signal == f0)[0][0]
+            Fe=(Fm / 2)
+            scope=Fe / 20
+            sig=self.filteredFreq(signal, freq, Fe, scope)
+            #self.plotSignal(self, Fm, signal)
+            if sig:
+                sig=self.signalToDict( sig )
+                signal=sig.get('signal')
+                freq=sig.get('frequency')
+                #f0=max(signal[1:])
+                #n=np.where(signal == f0)[0][0]
 
-            return [ freq, signal ]
+                return [ freq, signal ]
 
         return None
 

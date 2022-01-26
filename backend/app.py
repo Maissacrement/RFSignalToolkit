@@ -19,6 +19,7 @@ import sys
 import subprocess
 
 def extractor(dumplist):
+    print('searching..')
     try:
         for i, dt in enumerate(dumplist):
             packet=subprocess.run(["./packetExtractor/script.sh", str(dt)], capture_output=True)
@@ -45,7 +46,6 @@ def dyns():
     dumpShiftedLeft=[]
     i = 2400
     df=convertToMagnet(request.get_json())
-    print(df)
     
     sig=[]
     FREQUENCY=60000
