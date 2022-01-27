@@ -51,7 +51,7 @@ class Analyse:
         for i in range(self.secondLength):
             omegaN=len(self.getSetBySecond(i+1))
             if(i!=0):
-                [ signal.append(self.f(a, i, omegaN) + np.cos( 2*np.pi*fe*i )) for a in A[p:p+omegaN]]
+                [ signal.append(self.f(a, i, omegaN)) for a in A[p:p+omegaN]]
                 p+=omegaN
 
         return {
@@ -133,6 +133,8 @@ class Analyse:
         if type(sig["signal"]) != type(None):
             signal=sig.get('signal')
             freq=sig.get('frequency')
+            #plt.plot(freq, signal.real, label="Signal")
+            #plt.show()
             #Fe=(Fm / 2)
             #scope=Fe / 20
             #sig=self.filteredFreq(signal, freq, Fe, scope)
