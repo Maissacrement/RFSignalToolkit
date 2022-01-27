@@ -96,7 +96,7 @@ class Analyse:
         end_time=int(self.dataset["time"][-1])
         self.secondLength = end_time - self.start_time
         
-        return [ np.sqrt(magnet.iloc[(x*3)][0]**2 + magnet.iloc[(x*3)+1][0]**2 + magnet.iloc[(x*3)+2][0]**2) * (10**-9) for x in range(int(len(magnet)/3))]
+        return [ np.sqrt(magnet.iloc[(x*3)][1]**2 + magnet.iloc[(x*3)+1][1]**2 + magnet.iloc[(x*3)+2][1]**2) * (10**-9) for x in range(int(len(magnet)/3))]
 
 
     """
