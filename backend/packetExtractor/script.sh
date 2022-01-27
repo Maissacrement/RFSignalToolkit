@@ -21,7 +21,12 @@ function main0 () {
 
 function main () {
     dump=`echo $1 | xxd -p -r | hexdump -C | xargs -0 -I {} echo -e "$(date +"%Y-%m-%d %T")\n"{} | text2pcap -d - - 2>/dev/null | tshark -V -T json -r -`
-    if [ 0 -ne `echo ${dump} | grep -vw "\"frame.protocols\":\s\"\(eth\|eth:ethertype:data\|eth:llc:data\)\"" | wc -l` ];then    echo "[${dump}]\n...";fi
+    if [ 0 -ne `echo ${dump} | grep -vw "\"frame.protocols\":\s\"\(eth\|eth:ethertype:data\|eth:llc:data\)\"" | wc -l` ];
+    then
+        echo "[${dump}]\n...";
+    else
+        if [ 0 -ne `echo ${dump} | grep -E "eth.dst_resolved\":\s+\"([a-zA-Z0-9]{3,}(:|))+ | wc -l` ];then    echo ${dump};fi
+    fi
 }
 
 if [ -z "$@" ];

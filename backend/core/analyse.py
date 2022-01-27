@@ -136,7 +136,6 @@ class Analyse:
             #Fe=(Fm / 2)
             #scope=Fe / 20
             #sig=self.filteredFreq(signal, freq, Fe, scope)
-            #self.plotSignal(self, Fm, signal)
             #if sig:
             #    sig=self.signalToDict( sig )
             #    signal=sig.get('signal')

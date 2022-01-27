@@ -26,7 +26,8 @@ def extractor(dumplist):
         for i, dt in enumerate(dumplist):
             packet=subprocess.run(["{}/packetExtractor/script.sh".format(os.getcwd()), str(dt)], capture_output=True)
             if packet.returncode == 0 and len(packet.stdout) != 0:
-                print(packet.stdout)
+                formatPacket=packet.stdout[:len(packet.stdout) - 8]
+                print(formatPacket)
                 yield packet.stdout
             #os.system('./packetExtractor/script.sh {}'.format(dt))
             #if os.path.getsize("./debug.json"):
@@ -79,20 +80,18 @@ def dyns():
 
 @app.route('/magnet', methods=['POST'])
 def push():
-    analyse = Analyse()
-    udp=UdPAnalyser()
-    analyse.provideDataset(os.getcwd() +'/json/radio.csv')
-    signal = analyse.changeFrequency(30)
-    s=''
-
-    if signal:
-        numericalAnalysis=CAN()
-        signal=[numericalAnalysis.can(16, signal[1].real), numericalAnalysis.can(16, signal[1].imag)]
-        s=numericalAnalysis.qbits(signal[0])
+    #analyse = Analyse()
+    #udp=UdPAnalyser()
+    #analyse.provideDataset(os.getcwd() +'/json/radio.csv')
+    #signal = analyse.changeFrequency(30)
+    #s=''
+    #if signal:
+    #    numericalAnalysis=CAN()
+    #    signal=[numericalAnalysis.can(16, signal[1].real), numericalAnalysis.can(16, signal[1].imag)]
+    #    s=numericalAnalysis.qbits(signal[0])
 
     return json.dumps({
         'magnet': [magnet(req, mode = 'w' if i == 0 else 'a', filename='./radio.csv') for i, req in enumerate(request.get_json())],
-        'dump': udp.dump(s)
     })
 
 if __name__ == "__main__":
