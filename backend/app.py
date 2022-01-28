@@ -18,10 +18,22 @@ import pandas as pd
 import sys
 import subprocess
 
+# SIGNAL FREQUENCY TYPE
+signalRange={
+  'bluetooth': [2400, 2483.5, 60000],
+  'wimax': [10000, 66000, 2000, 11000],
+  #'lorawan': [433.05, 434.79, 863, 870, 902.3, 914.9],
+  #'wifi': [900, 2.4 * (10**3), 3.6 * (10**3), 4.9 * (10**3), 5 * (10**3), 5.9 * (10**3), 6 * (10**3), 60 * (10**3)],
+  #'manet': [300  * (10**3)],
+  #'other': [9.20  * (10**3)]
+}
+
+wireless=[]
+[ wireless.extend(x) for x in map(lambda x: signalRange.get(x), signalRange.keys()) ]
+
 def extractor(dumplist):
     print('searching..')
     try:
-        print(dumplist)
         dumplist=[ *filter(lambda x: len(x.strip()) != 0, dumplist) ]
         for i, dt in enumerate(dumplist):
             packet=subprocess.run(["{}/packetExtractor/script.sh".format(os.getcwd()), str(dt)], capture_output=True)
@@ -51,26 +63,26 @@ def dyns():
     df=convertToMagnet(request.get_json())
     
     sig=[]
-    FREQUENCY=60000
-    if(len(sys.argv) > 1):
-        FREQUENCY=int(sys.argv[1])
-
-    print('[APP]: is running for {} Mhz'.format(FREQUENCY))
+    #FREQUENCY=60000
+    #if(len(sys.argv) > 1):
+    #    FREQUENCY=int(sys.argv[1])
 
     # Search from frequency range 1000000000 hertz to 900000000000 hertz
-    cut=int(len(df)/MTU)
-    for j in range(cut):
-        analyse.provideDataset(False, df[j:]) if len(df[j:]) < MTU else analyse.provideDataset(False, df[j:j+MTU])
-        #analyse.provideDataset(False, df[0:])
-        signal = analyse.changeFrequency( FREQUENCY )
-        print(signal)
-        if signal:
-            numericalAnalysis=CAN()
-            s=numericalAnalysis.qbits(numericalAnalysis.can(15, signal[1][1:].real))
-            if(s not in sig):
-                p=''.join(s)
-                sig.append(p)
-                dumpShiftedLeft+=[p] +[ ''.join([ hex(int(p[x:x+2], 16) ^ i)[2:] for x in range(int(len(p) / 2)) ]) for i in range(127) ]
+    for FREQUENCY in wireless:
+        print('[APP]: is running for {} Mhz'.format(FREQUENCY))
+        cut=int(len(df)/MTU)
+        for j in range(cut):
+            analyse.provideDataset(False, df[j:]) if len(df[j:]) < MTU else analyse.provideDataset(False, df[j:j+MTU])
+            #analyse.provideDataset(False, df[0:])
+            signal = analyse.changeFrequency( FREQUENCY )
+            if signal:
+                numericalAnalysis=CAN()
+                s=numericalAnalysis.qbits(numericalAnalysis.can(15, signal[1].real))
+                if(s not in sig):
+                    p=''.join(s)
+                    sig.append(p)
+                    dumpShiftedLeft+=[p] +[ ''.join([ hex(int(p[x:x+2], 16) ^ i)[2:] for x in range(int(len(p) / 2)) ]) for i in range(127) ]
+
 
     return Response(extractor(dumpShiftedLeft), mimetype="application/json")
                     
