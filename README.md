@@ -20,6 +20,25 @@ The objective from an application point of view is to get the most information f
           <td>1</td>
           <td> 
             US1: As a User,<br>
+            I want to be able to get apximated value from neighborhood devices.
+            to do this, I go to the endpoint "/proximity", I provide a csv or json.
+            Dataset will be contains following pameters.
+            <ul>
+              <li> Magnet: Array ( < 50 integer, < 50 integer ) </li> [...3 row magnet x,y,z, ...3 row iron magnet x,y,z]
+              <li> CreatedAtNs: Text ( < 50 char ) </li>
+              <li> initialTime: Text ( < 50 char ) </li>
+              <li> Time: Text ( < 50 char ) </li>
+            </ul>
+            Each set's tagged by their axis in 3 rows x,y,z
+            In order to retrieve position, volt, signal, other characteristics from audited device   
+          </td>
+          <td>1</td>
+          <td>HIGH</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td> 
+            US2: As a User,<br>
             I want to be able to do a signal analysis.
             to do this, I go to the home page, I can choose to enter by hand or import a csv.
             I submit a set of data to the application, with the following parameters.
@@ -36,9 +55,9 @@ The objective from an application point of view is to get the most information f
           <td>HIGH</td>
         </tr>
         <tr>
-          <td>2</td>
+          <td>3</td>
           <td> 
-            US2: As a User,<br>
+            US3: As a User,<br>
             I want to be able to select a specied range of frequency.
             to do this, i select with an input a data range. 
             In order to update data in analyzed signal. 
@@ -47,9 +66,9 @@ The objective from an application point of view is to get the most information f
           <td>HIGH</td>
         </tr>
         <tr>
-          <td>3</td>
+          <td>4</td>
           <td> 
-            US3: As a User,<br>
+            US4: As a User,<br>
             I want to be able to change format of data viz.
             to do this, i select in the input sinusoidal mode or numerical output.
             In order to, visualize in real time analyzed signal. 
@@ -58,9 +77,9 @@ The objective from an application point of view is to get the most information f
           <td>LOW</td>
         </tr>
         <tr>
-          <td>4</td>
+          <td>5</td>
           <td> 
-            US4: As a User,<br>
+            US5: As a User,<br>
             I want to be able to exploit signal datagrame header.
             to do this, A menu on the right with the data of the header,
             the datagram will allow to visualize the data in hexadecimal format
