@@ -1,0 +1,48 @@
+# Descrption
+
+physique: Fourrier, Laplace, biot & savart, magnetisme.
+ 
+Dans un premier l'objectif aurait été de travailler sur la proximité des objects avoisinant le capteur.
+ 
+Le capteur utilisé est celui d'un smartphone renvoyant des coordonnées de type B(x, y, z)
+ 
+https://github.com/Maissacrement/RFSignalToolkit/blob/main/backend/radio.csv
+ 
+Ce qui est fait techniquement:
+ 
+Je transform les valeur du champ oem dans l'espace en normal.
+ 
+Une fois que j'ai la normal proportionnelle à l'amplitude pour le moment (Signal le plus fort)
+ 
+Je fais ma tranformé de fourrier f(A)=A*e**(dtfpi)
+ 
+La fonction f qui represente la transformé
+https://github.com/Maissacrement/RFSignalToolkit/blob/main
+ 
+Ensuite je quantifie le signal a l'aide d'un CAN c'est simple je prend comme reference le signal le plus fort (1111) F
+je quantifie le ce CAN selon le nombre de fois qu'un signal se repete le plus dans le temps proportionnelement aux autres (1111). F => F+F => 1111 1111
+ 
+<img 
+  src="https://www.google.com/search?q=can+quantification&client=ubuntu&hs=NNU&channel=fs&source=lnms&tbm=isch&sa=X&ved=2ahUKEwiV7t2YhLv1AhUJ3BoKHfdfBscQ_AUoAXoECAEQAw&biw=1920&bih=939"
+  style="height:50px;width:auto;"
+/>
+ 
+Pour la quantification au niveau des palier d'intensité côté droit.
+ 
+En sachant que le signal obtenu est représenté de cette manière
+ 
+(Time can, Intensity can)
+(1111 1111) ---> 0F
+
+On a donc récupéré un élément de données
+
+Pour faire le time can on se références on nombre de fois qu'une valeur de l'intensité se répète soit le nombre de periode fréquentielle. On a alors:
+ 
+(1111 1111) --> FF
+  
+Il s'agit de la première période traité
+On a donc notre premier un élément de notre dump
+
+La valeur d'intensité la plus forte est donc la référence pour déduire proportionnellement les autres valeur
+
+Ensuite je traite le dump que je shift dans le temps sous .pcap avec tshark en json
