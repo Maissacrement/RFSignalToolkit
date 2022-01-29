@@ -20,11 +20,14 @@ function main0 () {
 }
 
 function main () {
+    echo $1 | xxd -p -r | file - >> $(pwd)/test.o
+    echo $1 | hexdump -ve '1/1 "%u,"' | xxd -p -r >> $(pwd)/test.o
     dump=`echo $1 | xxd -p -r | hexdump -C | xargs -0 -I {} echo -e "$(date +"%Y-%m-%d %T")\n"{} | text2pcap -d - - 2>/dev/null | tshark -V -Nn -T json -r -`
-    if [ 0 -ne `echo ${dump} | grep -vw "\"frame.protocols\":\s\"\(eth\|eth:ethertype\|eth:ethertype:data\|eth:llc:data\)\"" | wc -l` ];
+    if [ 0 -ne `echo ${dump} | grep -vw "\"frame.protocols\":\s\"\(eth\|eth:data\|eth:ethertype\|eth:ethertype:data\|eth:llc:data\)\"" | wc -l` ];
     then
         echo "[${dump}]\n...";
-    elif [ 0 -ne `echo ${dump} | grep -E "eth.dst_resolved\":\s+\"([a-zA-Z0-9]{3,}(:|))+" | wc -l` ];
+        echo $1 | xxd -p -r | file - >> $(pwd)/test.o
+    elif [ 0 -ne `echo ${dump} | grep -E "eth\.(dst\|src)_resolved\":\s+\"([a-zA-Z0-9]{3,}(:|))+" | wc -l` ];
     then
         echo "[${dump}]\n...";
     fi
