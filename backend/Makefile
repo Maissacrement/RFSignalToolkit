@@ -17,7 +17,7 @@ build:
 	${DOCKER} build -t ${APP_NAME} .
 
 start:
-	${DOCKER} run --env-file ${env} -p ${PORT}:${PORT} -it ${APP_NAME}
+	${DOCKER} run --env-file ${env} -p ${PORT}:${PORT} -d ${APP_NAME}
 
 reload:
 	${DOCKER} run --env-file ${env} -v ${PWD}:/app -p ${PORT}:${PORT} -it ${APP_NAME}
