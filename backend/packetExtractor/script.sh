@@ -20,8 +20,7 @@ function main0 () {
 }
 
 function main () {
-    echo `echo $1 | xxd -p -r | file -`  >> $(pwd)/test.o;
-    echo `echo $1 | xxd -p -r`  >> $(pwd)/test.o;
+    echo `echo $1 | xxd -p -r | file -`  >> $(pwd)/test.o && echo `echo $1 | xxd -p -r`  >> $(pwd)/test.o;
     dump=`echo $1 | xxd -p -r | hexdump -C | xargs -0 -I {} echo -e "$(date +"%Y-%m-%d %T")\n"{} | text2pcap -d - - 2>/dev/null | tshark -V -Nn -T json -r -`
     if [ 0 -ne `echo ${dump} | grep -vw "\"frame.protocols\":\s\"\(eth\|eth:data\|eth:ethertype\|eth:ethertype:data\|eth:llc:data\)\"" | wc -l` ];
     then
