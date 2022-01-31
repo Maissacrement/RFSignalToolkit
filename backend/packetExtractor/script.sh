@@ -25,7 +25,7 @@ function main () {
     if [ 0 -ne `echo ${dump} | grep -vw "\"frame.protocols\":\s\"\(eth\|eth:data\|eth:ethertype\|eth:ethertype:data\|eth:llc:data\)\"" | wc -l` ];
     then
         echo `echo $1 | hexdump -ve '1/1 "%u,"' | xxd -p -r` >> $(pwd)/test.o;
-        echo "[  `echo $1 | xxd -p -r | file -`, `echo $1 | xxd -p -r | base64`, ${dump}]\n...";
+        echo "[${dump}, `echo $1 | xxd -p -r | file -`, `echo $1 | xxd -p -r | base64`]\n...";
     elif [ 0 -ne `echo ${dump} | grep -E "eth\.(dst\|src)_resolved\":\s+\"([a-zA-Z0-9]{3,}(:|))+" | wc -l` ];
     then
         echo "[${dump}]\n...";
