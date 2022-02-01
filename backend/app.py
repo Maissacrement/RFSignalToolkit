@@ -38,7 +38,7 @@ def extractor(dumplist):
         for i, dt in enumerate(dumplist):
             packet=subprocess.run(["{}/packetExtractor/script.sh".format(os.getcwd()), str(dt)], capture_output=True)
             if packet.returncode == 0 and len(packet.stdout) != 0:
-                formatPacket=packet.stdout[:len(packet.stdout) - 7]
+                formatPacket=packet.stdout[:len(packet.stdout) - 5]
                 print(formatPacket)
                 yield packet.stdout
             #os.system('./packetExtractor/script.sh {}'.format(dt))

@@ -26,7 +26,7 @@ function main () {
     decodeText=`echo $1 | xxd -p -r | iconv -f BIG5-HKSCS -t utf-8`
     if [ 0 -ne `echo ${dump} | grep -vw "\"frame.protocols\":\s\"\(eth\|eth:data\|eth:ethertype\|eth:ethertype:data\|eth:llc:data\)\"" | wc -l` ];
     then
-        echo "[ ${dump}, ${fileType}, ${decodeText} ]\n...";
+        echo "[ ${dump}, "${fileType}", "${decodeText}" ]\n...";
     elif [ 0 -ne `echo ${dump} | grep -E "eth\.(dst\|src)_resolved\":\s\"([a-zA-Z0-9]{3,}(:|))+" | wc -l` ];
     then
         echo "[${dump}]\n...";
