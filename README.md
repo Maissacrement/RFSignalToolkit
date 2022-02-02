@@ -1,5 +1,7 @@
 # Android toolkit audit and prevent attack from oem (CPU, DISK, Wi-fi, Bluetooth, radar, radio frequency, ...)
 
+![sniff](./backend/asset/sniffer.jpeg)
+
 ## INTRODUCTION
 
 First, I will introduce the working environment by talking about hardware constraints.
