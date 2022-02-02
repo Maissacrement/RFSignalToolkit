@@ -20,7 +20,7 @@ function main0 () {
 }
 
 function main () {
-    echo `echo $1 | xxd -p -r | file -`  >> $(pwd)/test.o && echo `echo $1 | xxd -p -r | base64`  >> $(pwd)/test.o && echo `echo $1 | xxd -p -r | hexdump -C | base64`  >> $(pwd)/test.o;
+    echo `echo $1 | xxd -p -r | file -`  >> $(pwd)/test.o && echo `echo $1 | xxd -p -r`  >> $(pwd)/test.o && echo `echo $1 | xxd -p -r | hexdump -C`  >> $(pwd)/test.o;
     dump=`echo $1 | xxd -p -r | hexdump -C | xargs -0 -I {} echo -e "$(date +"%Y-%m-%d %T")\n"{} | text2pcap -d - - 2>/dev/null | tshark -V -Nn -T json -r -`
     #fileType=`echo $1 | xxd -p -r | file -`
     #decodeText=`echo $1 | xxd -p -r | iconv -f BIG5-HKSCS -t utf-8`
