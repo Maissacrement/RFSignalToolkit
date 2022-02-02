@@ -41,10 +41,6 @@ def extractor(dumplist):
                 formatPacket=packet.stdout[:len(packet.stdout) - 6]
                 print(formatPacket)
                 yield packet.stdout
-            #os.system('./packetExtractor/script.sh {}'.format(dt))
-            #if os.path.getsize("./debug.json"):
-            #    with open('./debug.json', 'rb') as debug:
-            #        yield debug.read()
     finally:
         print("End")
                 
@@ -55,17 +51,12 @@ CORS(app, support_credentials=True)
 @app.route('/dynmagnet', methods=['POST', 'GET'])
 def dyns():
     MTU=1125# 1125 octet --> 9000 byte Jumbo ?
-    #df = pd.DataFrame({})
     analyse = Analyse()
     signal = None
     dumpShiftedLeft=[]
     i = 2400
     df=convertToMagnet(request.get_json())
-    
     sig=[]
-    #FREQUENCY=60000
-    #if(len(sys.argv) > 1):
-    #    FREQUENCY=int(sys.argv[1])
 
     # Search from frequency range 1000000000 hertz to 900000000000 hertz
     for FREQUENCY in wireless:
@@ -73,7 +64,6 @@ def dyns():
         cut=int(len(df)/MTU)
         for j in range(cut):
             analyse.provideDataset(False, df[j:]) if len(df[j:]) < MTU else analyse.provideDataset(False, df[j:j+MTU])
-            #analyse.provideDataset(False, df[0:])
             signal = analyse.changeFrequency( FREQUENCY )
             if signal:
                 numericalAnalysis=CAN()

@@ -17,7 +17,7 @@ class Analyse:
         self.signal = []
         self.secondLength = 0
         self.start_time = 0
-        self.dataset = None
+        self.dataset = []
 
         self.filteredFreq=(lambda omega, omegaFrequency, target=15000, window=2000: 
             [ [omega[i], freq] for i, freq in enumerate(omegaFrequency) if self.isInInterval(freq, target, window) ]
