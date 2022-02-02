@@ -141,11 +141,6 @@ class Analyse:
                 signal=sig.get('signal')[1:]
                 freq=sig.get('frequency')[1:]
 
-                plt.plot(freq, signal.real, label="Signal")
-                #plt.show()
-                #f0=max(signal[1:])
-                #n=np.where(signal == f0)[0][0]
-
             return [ freq, signal ]
 
         return None

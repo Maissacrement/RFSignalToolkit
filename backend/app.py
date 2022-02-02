@@ -73,8 +73,6 @@ def dyns():
                     sig.append(p)
                     dumpShiftedLeft+=[p] +[ ''.join([ hex(int(p[x:x+2], 16) ^ i)[2:] for x in range(int(len(p) / 2)) ]) for i in range(127) ]
 
-    plt.show()
-
     return Response(extractor(dumpShiftedLeft), mimetype="application/json")
                     
 
