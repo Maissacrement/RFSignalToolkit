@@ -31,16 +31,26 @@ signalRange={
 wireless=[]
 [ wireless.extend(x) for x in map(lambda x: signalRange.get(x), signalRange.keys()) ]
 
-def extractor(dumplist):
+def extractor(dumplist, count):
+    import base64
+
     print('searching..')
     try:
         dumplist=[ *filter(lambda x: len(x.strip()) != 0, dumplist) ]
-        for i, dt in enumerate(dumplist):
-            packet=subprocess.run(["{}/packetExtractor/script.sh".format(os.getcwd()), str(dt)], capture_output=True)
-            if packet.returncode == 0 and len(packet.stdout) != 0:
-                formatPacket=packet.stdout[:len(packet.stdout) - 6]
-                print(formatPacket)
-                yield packet.stdout
+        for i in range(count - 1):
+            #[ os.system('{}'.format(os.getcwd(), hexdump)) for hexdump in dumplist ]
+            dump=" ".join(dumplist[i*count:(1+i)*count])
+            packet=subprocess.run(["{}/packetExtractor/script.sh".format(os.getcwd()), str(dump) ], stdout=subprocess.PIPE)
+            if packet.returncode == 0:
+                if (i == count -2): yield bytes(str(packet.stdout).encode('utf-8'))
+            #packet=[ subprocess.run(["/usr/bin/echo", "{}".format(hexdump), "|", "text2pcap -m1460 -T0,0 -i4 - -"], capture_output=True) for hexdump in dumplist ]
+            #print(packet)
+        #for i, dt in enumerate(dumplist):
+        #    packet=subprocess.run(["{}/packetExtractor/script.sh".format(os.getcwd()), str(dt)], capture_output=True)
+        #    if packet.returncode == 0 and len(packet.stdout) != 0:
+        #        formatPacket=packet.stdout[:len(packet.stdout) - 6]
+        #        print(formatPacket)
+        #        yield packet.stdout
     finally:
         print("End")
                 
@@ -56,12 +66,12 @@ def dyns():
     dumpShiftedLeft=[]
     i = 2400
     df=convertToMagnet(request.get_json())
+    cut=int(len(df)/MTU)
     sig=[]
 
     # Search from frequency range 1000000000 hertz to 900000000000 hertz
     for FREQUENCY in wireless:
         print('[APP]: is running for {} Mhz'.format(FREQUENCY))
-        cut=int(len(df)/MTU)
         for j in range(cut):
             analyse.provideDataset(False, df[j:]) if len(df[j:]) < MTU else analyse.provideDataset(False, df[j:j+MTU])
             signal = analyse.changeFrequency( FREQUENCY )
@@ -73,7 +83,7 @@ def dyns():
                     sig.append(p)
                     dumpShiftedLeft+=[p] +[ ''.join([ hex(int(p[x:x+2], 16) ^ i)[2:] for x in range(int(len(p) / 2)) ]) for i in range(127) ]
 
-    return Response(extractor(dumpShiftedLeft), mimetype="application/json")
+    return Response(extractor(dumpShiftedLeft, cut), mimetype="application/json")
                     
 
     #else:
