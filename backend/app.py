@@ -32,25 +32,15 @@ wireless=[]
 [ wireless.extend(x) for x in map(lambda x: signalRange.get(x), signalRange.keys()) ]
 
 def extractor(dumplist, count):
-    import base64
-
     print('searching..')
     try:
         dumplist=[ *filter(lambda x: len(x.strip()) != 0, dumplist) ]
+        os.system('echo > /tmp/set')
         for i in range(count - 1):
-            #[ os.system('{}'.format(os.getcwd(), hexdump)) for hexdump in dumplist ]
             dump=" ".join(dumplist[i*count:(1+i)*count])
             packet=subprocess.run(["{}/packetExtractor/script.sh".format(os.getcwd()), str(dump) ], stdout=subprocess.PIPE)
             if packet.returncode == 0:
                 if (i == count -2): yield bytes(str(packet.stdout).encode('utf-8'))
-            #packet=[ subprocess.run(["/usr/bin/echo", "{}".format(hexdump), "|", "text2pcap -m1460 -T0,0 -i4 - -"], capture_output=True) for hexdump in dumplist ]
-            #print(packet)
-        #for i, dt in enumerate(dumplist):
-        #    packet=subprocess.run(["{}/packetExtractor/script.sh".format(os.getcwd()), str(dt)], capture_output=True)
-        #    if packet.returncode == 0 and len(packet.stdout) != 0:
-        #        formatPacket=packet.stdout[:len(packet.stdout) - 6]
-        #        print(formatPacket)
-        #        yield packet.stdout
     finally:
         print("End")
                 
@@ -60,7 +50,7 @@ CORS(app, support_credentials=True)
 
 @app.route('/dynmagnet', methods=['POST', 'GET'])
 def dyns():
-    MTU=1125# 1125 octet --> 9000 byte Jumbo ?
+    MTU=2800# 1125 octet --> 9000 byte Jumbo ?
     analyse = Analyse()
     signal = None
     dumpShiftedLeft=[]

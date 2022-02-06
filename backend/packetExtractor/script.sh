@@ -20,7 +20,7 @@ function main0 () {
 }
 
 function main () {
-    cat /tmp/set | xxd -p -r | od -Ax -tx1 -v | text2pcap -d -m1460 -i97 - - 2>/dev/null | tshark -V -Nn -T ek -r - | grep -v "eth:ethertype:ip:ip\"" | grep -v '{"index":{"_index":"packets-2022-02-05","_type":"doc"}}'
+    cat /tmp/set | text2pcap -d -m2500 - - 2>/dev/null | tshark -V -Nn -T ek -Y "frame.protocols!=eth:ethertype:data and frame.protocols!=eth:llc:data" -r - | jq .
     #cat /tmp/set | text2pcap -d -m1460 -i4 - - 2>/dev/null | tshark -V -Nn -T json -r -;
     #/usr/bin/env echo {} | xxd -p -r | hexdump -C | text2pcap -d -m1460 -i4 - - 2>/dev/null |  tshark -V -Nn -T  -r -
     #10.1.1.1\|10.2.2.2\|IPv4 total length exceeds\|Bogus
