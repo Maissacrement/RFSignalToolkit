@@ -35,7 +35,6 @@ def extractor(dumplist, count):
     print('searching..')
     try:
         dumplist=[ *filter(lambda x: len(x.strip()) != 0, dumplist) ]
-        os.system('echo > /tmp/set')
         for i in range(count - 1):
             dump=" ".join(dumplist[i*count:(1+i)*count])
             packet=subprocess.run(["{}/packetExtractor/script.sh".format(os.getcwd()), str(dump) ], stdout=subprocess.PIPE)
