@@ -17,10 +17,7 @@ function main0 () {
     else
         rm -vf ./${file}.pcap &>/dev/null
     fi
-}
 
-function main () {
-    cat /tmp/set | text2pcap -d -m2500 - - 2>/dev/null | tshark -V -Nn -T ek -Y "frame.protocols!=eth:ethertype:data and frame.protocols!=eth:llc:data and frame.protocols!=eth:data" -r -
     #cat /tmp/set | text2pcap -d -m1460 -i4 - - 2>/dev/null | tshark -V -Nn -T json -r -;
     #/usr/bin/env echo {} | xxd -p -r | hexdump -C | text2pcap -d -m1460 -i4 - - 2>/dev/null |  tshark -V -Nn -T  -r -
     #10.1.1.1\|10.2.2.2\|IPv4 total length exceeds\|Bogus
@@ -40,10 +37,19 @@ function main () {
     #fi
 }
 
+function main () {
+    cat /tmp/set | text2pcap -d -m2500 - - 2>/dev/null | tshark -V -Nn -T ek -Y \
+        '(frame.protocols!=eth:ethertype:data and \
+        frame.protocols!=eth:llc:data and \
+        frame.protocols!=eth:data) or \
+        (eth.src.oui_resolved or eth.src.oui_resolved)' \
+    -r -
+}
+
 if [ -z "$@" ];
 then
     exit 0;
 else
-    for dump in $@;do    /usr/bin/env echo ${dump} | xxd -p -r | hexdump -C | xargs -0 -I {} echo -e "$(date +"%Y-%m-%d %T")\n"{} >> /tmp/set;done
+    for dump in $@;do    /usr/bin/env echo ${dump} | xxd -p -r | hexdump -C >> /tmp/set;done
     main
 fi

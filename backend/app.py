@@ -49,7 +49,7 @@ CORS(app, support_credentials=True)
 
 @app.route('/dynmagnet', methods=['POST', 'GET'])
 def dyns():
-    MTU=2800# 1125 octet --> 9000 byte Jumbo ?
+    MTU=2500# 1125 octet --> 9000 byte Jumbo ?
     analyse = Analyse()
     signal = None
     dumpShiftedLeft=[]
