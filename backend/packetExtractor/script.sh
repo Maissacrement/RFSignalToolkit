@@ -51,6 +51,6 @@ then
     exit 0;
 else
     mkdir -p /tmp/set
-    for dump in "${@:2:$#}";do    /usr/bin/env echo ${dump} | xxd -p -r | hexdump -C >> /tmp/set;done
+    for dump in "${@:2:$#}";do    /usr/bin/env echo ${dump} | xxd -p -r | hexdump -C >> /tmp/set/$2;done
     main $2
 fi
