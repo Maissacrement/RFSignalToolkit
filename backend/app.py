@@ -17,6 +17,7 @@ import os
 import pandas as pd
 import sys
 import subprocess
+import jwt
 
 # SIGNAL FREQUENCY TYPE
 signalRange={
@@ -33,14 +34,16 @@ wireless=[]
 
 def extractor(dumplist, count):
     print('searching..')
+    enc = jwt.encode({"some": "payload"}, "secret", algorithm="HS256")
     try:
         dumplist=[ *filter(lambda x: len(x.strip()) != 0, dumplist) ]
         for i in range(count - 1):
             dump=" ".join(dumplist[i*count:(1+i)*count])
-            packet=subprocess.run(["{}/packetExtractor/script.sh".format(os.getcwd()), str(dump) ], stdout=subprocess.PIPE)
+            packet=subprocess.run(["{}/packetExtractor/script.sh".format(os.getcwd()), '/tmp/sets/hk{}'.format(enc), str(dump) ], stdout=subprocess.PIPE)
             if packet.returncode == 0:
                 if (i == count -2): yield bytes(str(packet.stdout).encode('utf-8'))
     finally:
+        os.system('rm -vf /tmp/sets/hk{}'.format(enc))
         print("End")
                 
 
@@ -49,7 +52,7 @@ CORS(app, support_credentials=True)
 
 @app.route('/dynmagnet', methods=['POST', 'GET'])
 def dyns():
-    MTU=2500# 1125 octet --> 9000 byte Jumbo ?
+    MTU=800# 1125 octet --> 9000 byte Jumbo ?
     analyse = Analyse()
     signal = None
     dumpShiftedLeft=[]
