@@ -38,7 +38,7 @@ function main0 () {
 }
 
 function main () {
-    cat /tmp/set/$1 | text2pcap -d - - 2>/dev/null | tshark -V -Nn -T ek -Y \
+    cat /tmp/set | text2pcap -d - - 2>/dev/null | tshark -V -Nn -T ek -Y \
         "(frame.protocols!=eth:ethertype:data and \
         frame.protocols!=eth:llc:data and \
         frame.protocols!=eth:data) or \
@@ -50,7 +50,7 @@ if [ -z "$@" ];
 then
     exit 0;
 else
-    mkdir -p /tmp/set
-    for dump in "${@:2:$#}";do    /usr/bin/env echo ${dump} | xxd -p -r | hexdump -C >> /tmp/set/$2;done
-    main $2
+    echo > /tmp/set
+    for dump in "${@:2:$#}";do    /usr/bin/env echo ${dump} | xxd -p -r | hexdump -C >> /tmp/set;done
+    main
 fi

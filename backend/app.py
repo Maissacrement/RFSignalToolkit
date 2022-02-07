@@ -34,7 +34,7 @@ wireless=[]
 
 def extractor(dumplist, count):
     print('searching..')
-    enc = jwt.encode({"some": "payload"}, "secret", algorithm="HS256")
+    enc = jwt.encode({"some": "payload"}, "secret", algorithm="HS256")[:6]
     try:
         dumplist=[ *filter(lambda x: len(x.strip()) != 0, dumplist) ]
         for i in range(count - 1):

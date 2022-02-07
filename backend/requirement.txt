@@ -20,3 +20,4 @@ python-engineio==3.13.2
 python-socketio==4.6.0
 jupyter
 PyJWT==2.3.0
+jwt
