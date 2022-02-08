@@ -17,7 +17,6 @@ import os
 import pandas as pd
 import sys
 import subprocess
-import jwt
 
 # SIGNAL FREQUENCY TYPE
 signalRange={
@@ -34,6 +33,7 @@ wireless=[]
 
 def extractor(dumplist, count):
     print('searching..')
+    os.system('rm /tmp/set;')
     try:
         dumplist=[ *filter(lambda x: len(x.strip()) != 0, dumplist) ]
         for i in range(count - 1):
