@@ -13,7 +13,7 @@ if [ -z "$@" ];
 then
     exit 0;
 else
-    mkdir -p ./dumps
-    for dump in $@;do    /usr/bin/env echo ${dump} | xxd -p -r | hexdump -C >> /tmp/set;done
+    mkdir -p ./dumps;
+    for dump in $@;do    /usr/bin/env echo ${dump} | od -Ax -tx1 -v | hexdump -C >> /tmp/set;done
     main
 fi
