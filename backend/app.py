@@ -33,15 +33,15 @@ wireless=[]
 
 def extractor(dumplist, count):
     print('searching..')
-    os.system('echo > /tmp/set;')
     try:
         dumplist=[ *filter(lambda x: len(x.strip()) != 0, dumplist) ]
-        for i in range(count - 1):
+        for i in range(int(len(dumplist) / count)):
             dump=" ".join(dumplist[i*count:(1+i)*count])
             packet=subprocess.run(["{}/packetExtractor/script.sh".format(os.getcwd()), str(dump) ], stdout=subprocess.PIPE)
             if packet.returncode == 0:
                 if (i == count -2): yield bytes(str(packet.stdout).encode('utf-8'))
     finally:
+        os.system("{}/packetExtractor/logger.sh &".format(os.getcwd()))
         print("End")
                 
 
@@ -50,7 +50,7 @@ CORS(app, support_credentials=True)
 
 @app.route('/dynmagnet', methods=['POST', 'GET'])
 def dyns():
-    MTU=800# 1125 octet --> 9000 byte Jumbo ?
+    MTU=1# 1125 octet --> 9000 byte Jumbo ?
     analyse = Analyse()
     signal = None
     dumpShiftedLeft=[]
@@ -62,18 +62,19 @@ def dyns():
     # Search from frequency range 1000000000 hertz to 900000000000 hertz
     for FREQUENCY in wireless:
         print('[APP]: is running for {} Mhz'.format(FREQUENCY))
-        for j in range(cut):
-            analyse.provideDataset(False, df[j:]) if len(df[j:]) < MTU else analyse.provideDataset(False, df[j:j+MTU])
-            signal = analyse.changeFrequency( FREQUENCY )
-            if signal:
-                numericalAnalysis=CAN()
-                s=numericalAnalysis.qbits(numericalAnalysis.can(15, signal[1].real))
-                if(s not in sig):
-                    p=''.join(s)
-                    sig.append(p)
-                    dumpShiftedLeft+=[p] +[ ''.join([ hex(int(p[x:x+2], 16) ^ i)[2:] for x in range(int(len(p) / 2)) ]) for i in range(127) ]
+        #for j in range(1):
+        #analyse.provideDataset(False, df[j:]) if len(df[j:]) < MTU else analyse.provideDataset(False, df[j:j+MTU])
+        analyse.provideDataset(False, df)
+        signal = analyse.changeFrequency( FREQUENCY )
+        if signal:
+            numericalAnalysis=CAN()
+            s=numericalAnalysis.qbits(numericalAnalysis.can(15, signal[1].real))
+            if(s not in sig):
+                p=''.join(s)
+                sig.append(p)
+                dumpShiftedLeft+=[p] +[ ''.join([ hex(int(p[x:x+2], 16) ^ i)[2:] for x in range(int(len(p) / 2)) ]) for i in range(127) ]
 
-    return Response(extractor(dumpShiftedLeft, cut), mimetype="application/json")
+    return Response(extractor(dumpShiftedLeft, 800), mimetype="application/json")
                     
 
     #else:
