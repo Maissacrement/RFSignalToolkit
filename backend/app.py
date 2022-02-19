@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from flask_cors import CORS,cross_origin
-from flask import Flask, Response, request
+from flask import Flask, Response, request, render_template
+import requests
 
 from core.analyse import Analyse
 from core.can import CAN
@@ -17,6 +18,11 @@ import os
 import pandas as pd
 import sys
 import subprocess
+from dotenv import load_dotenv
+
+# Load dotenv
+load_dotenv()
+TRACKER_URL=os.getenv('TRACKER_URL')
 
 # SIGNAL FREQUENCY TYPE
 signalRange={
@@ -41,12 +47,109 @@ def extractor(dumplist, count):
             if packet.returncode == 0:
                 if (i == count -2): yield bytes(str(packet.stdout).encode('utf-8'))
     finally:
-        os.system("{}/packetExtractor/logger.sh &".format(os.getcwd()))
+        #subprocess.run(["{}/packetExtractor/binaryParser.sh &".format(os.getcwd())])
+        #subprocess.run(["{}/packetExtractor/iptracker.sh &".format(os.getcwd())])
         print("End")
-                
+
+def iptrack():
+    data=""
+    try:
+        data=subprocess.run(["{}/packetExtractor/ips.sh".format(os.getcwd()), "{}/packetExtractor/set".format(os.getcwd())], stdout=subprocess.PIPE)
+        if data.returncode == 0:
+            for ip in [*filter(lambda x: len(x)>0, data.stdout.decode("utf-8").split('\n'))]:
+                response=requests.get(TRACKER_URL + '/list/{}'.format(ip))
+                yield bytes(response.text.encode('utf-8'))
+    finally:
+        print("End")        
 
 app = Flask(__name__)
 CORS(app, support_credentials=True)
+
+@app.route('/data', methods=['GET'])
+def views():
+    return """
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Simple Map</title>
+            <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+            <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+            <style>
+                /* Always set the map height explicitly to define the size of the div
+                 * element that contains the map. */
+                #map {
+                    height: 100%;
+                }
+                /* Optional: Makes the sample page fill the window. */
+                html,
+                body {
+                    height: 100%;
+                    margin: 0;
+                    padding: 0;
+                }
+            </style> 
+            <script>
+                let map;
+                function infobull(marker, msg) {
+                    const infowindow = new google.maps.InfoWindow({
+                        content: msg,
+                    });
+                    marker.addListener("click", () => {
+                        infowindow.open({
+                            anchor: marker,
+                            map,
+                            shouldFocus: false,
+                        });
+                    });
+                }
+
+                function initMap() {
+                    map = new google.maps.Map(document.getElementById("map"), {
+                        center: { lat: 0, lng: 0 },
+                        mapTypeId: google.maps.MapTypeId.ROADMAP,
+                        zoom: 3,
+                    });
+                    
+                    axios.get('http://0.0.0.0:5000/data/json', { headers: { 'Content-Type': 'application/octet-stream' } })
+                        .then((res) => {
+                            const data = JSON.parse('['+res.data.replaceAll('}{', '},{')+']')
+                            data.forEach(pos => {
+                                const [x, y]= pos.geo[0].location.split(',');
+                                const marker = new google.maps.Marker({
+                                    position: { lat: parseInt(x), lng: parseInt(y) },
+                                    map,
+                                    clickable: true,
+                                    title: pos.geo[0].more,
+                                });
+                                infobull(marker, pos.geo[0].more)
+                            })
+                        })
+                        .catch(function (error) {
+                            console.log(error)
+                        });
+                }
+            </script>
+        </head>
+        <body>
+            <div id="map"></div>
+            <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
+            <script
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBK8Zw9ZlWUFSrgM9bBYDpZvYg6YU3_Jb8&callback=initMap&v=weekly"
+            async
+            ></script>
+        </body>
+        </html>
+        """
+    
+@app.route('/data/text', methods=['GET'])
+def translatedtext():
+    return """<h1>Hello, World!</h1>"""
+
+@app.route('/data/json', methods=['GET'])
+def jsondata():
+    return Response(iptrack(), mimetype="application/json")
+
+
 
 @app.route('/dynmagnet', methods=['POST', 'GET'])
 def dyns():

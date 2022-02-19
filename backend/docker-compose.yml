@@ -8,3 +8,10 @@ services:
       context: ./
     ports:
       - 5000:5000
+  
+  tracker:
+    image: registry.gitlab.com/maissacrement/tracker:latest
+    ports:
+      - "7070:7070"
+    environment:
+      - PORT=7070
