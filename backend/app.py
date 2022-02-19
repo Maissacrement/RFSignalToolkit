@@ -110,7 +110,7 @@ def views():
                         zoom: 3,
                     });
                     
-                    axios.get('http://0.0.0.0:5000/data/json', { headers: { 'Content-Type': 'application/octet-stream' } })
+                    axios.get('http://172.56.20.1:5000/data/json', { headers: { 'Content-Type': 'application/octet-stream' } })
                         .then((res) => {
                             const data = JSON.parse('['+res.data.replaceAll('}{', '},{')+']')
                             data.forEach(pos => {
@@ -200,4 +200,4 @@ def push():
     })
 
 if __name__ == "__main__":
-    app.run(debug=True, use_reloader=True, host="0.0.0.0")
+    app.run(debug=True, use_reloader=True, host="172.56.20.1")

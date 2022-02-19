@@ -4,8 +4,11 @@ services:
   radio:
     env_file:
       - ./.env
-    build:
-      context: ./
+    # build:
+    # context: ./
+    networks:
+      - cluster
+    image: registry.gitlab.com/maissacrement/radio
     ports:
       - 5000:5000
   
@@ -13,5 +16,14 @@ services:
     image: registry.gitlab.com/maissacrement/tracker:latest
     ports:
       - "7070:7070"
+    networks:
+      - cluster
     environment:
       - PORT=7070
+
+networks:
+  cluster:
+    ipam:
+      config:
+        - subnet: 172.56.20.0/24
+          gateway: 172.56.20.1
