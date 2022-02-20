@@ -121,7 +121,7 @@ def views():
                         zoom: 3,
                     });
                     
-                    axios.get('http://0.0.0.0:5000/data/json', { headers: {
+                    axios.get('http://172.56.20.20:5000/data/json', { headers: {
                             'Content-Type': 'application/octet-stream', 
                             'Access-Control-Allow-Origin': '*',
                             'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Authorization, Accept',
