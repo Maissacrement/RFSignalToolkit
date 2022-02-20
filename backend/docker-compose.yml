@@ -4,8 +4,8 @@ services:
   radio:
     env_file:
       - ./.env
-    # build:
-    # context: ./
+    #build:
+    #  context: ./
     networks:
       - cluster
     image: registry.gitlab.com/maissacrement/radio
@@ -26,4 +26,4 @@ networks:
     ipam:
       config:
         - subnet: 172.56.20.0/24
-          gateway: 172.56.20.1
+          # gateway: 172.56.20.1

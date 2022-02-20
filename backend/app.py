@@ -23,6 +23,8 @@ from dotenv import load_dotenv
 # Load dotenv
 load_dotenv()
 TRACKER_URL=os.getenv('TRACKER_URL')
+HOST=os.getenv('HOST')
+PORT=os.getenv('PORT')
 
 # SIGNAL FREQUENCY TYPE
 signalRange={
@@ -63,7 +65,16 @@ def iptrack():
         print("End")        
 
 app = Flask(__name__)
-CORS(app, support_credentials=True)
+CORS_ALLOW_ORIGIN="*,*"
+CORS_EXPOSE_HEADERS="*,*"
+CORS_ALLOW_HEADERS="content-type,origin,*"
+cors = CORS(
+    app, origins=CORS_ALLOW_ORIGIN.split(","), 
+    allow_headers=CORS_ALLOW_HEADERS.split(","),
+    expose_headers= CORS_EXPOSE_HEADERS.split(","),
+    resources={r"/*": {"origins": "*"}},
+    supports_credentials = True
+)
 
 @app.route('/data', methods=['GET'])
 def views():
@@ -110,7 +121,11 @@ def views():
                         zoom: 3,
                     });
                     
-                    axios.get('http://172.56.20.1:5000/data/json', { headers: { 'Content-Type': 'application/octet-stream' } })
+                    axios.get('http://0.0.0.0:5000/data/json', { headers: {
+                            'Content-Type': 'application/octet-stream', 
+                            'Access-Control-Allow-Origin': '*',
+                            'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Authorization, Accept',
+                        } })
                         .then((res) => {
                             const data = JSON.parse('['+res.data.replaceAll('}{', '},{')+']')
                             data.forEach(pos => {
@@ -200,4 +215,4 @@ def push():
     })
 
 if __name__ == "__main__":
-    app.run(debug=True, use_reloader=True, host="172.56.20.1")
+    app.run(debug=True, use_reloader=True, host=HOST, port=PORT)
