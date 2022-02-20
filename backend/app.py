@@ -77,6 +77,7 @@ cors = CORS(
 )
 
 @app.route('/data', methods=['GET'])
+@cross_origin(supports_credentials=True)
 def views():
     return """
         <!DOCTYPE html>
@@ -161,8 +162,12 @@ def translatedtext():
     return """<h1>Hello, World!</h1>"""
 
 @app.route('/data/json', methods=['GET'])
+@cross_origin(supports_credentials=True)
 def jsondata():
-    return Response(iptrack(), mimetype="application/json")
+    return Response(iptrack(), mimetype="application/json", headers={
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Authorization, Accept',
+    })
 
 
 
