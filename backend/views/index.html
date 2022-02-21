@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Simple Map</title>
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <style>
+            /* Always set the map height explicitly to define the size of the div
+             * element that contains the map. */
+            #map {
+                height: 100%;
+            }
+            /* Optional: Makes the sample page fill the window. */
+            html,
+            body {
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+        </style> 
+        <script>
+            let map;
+            function infobull(marker, msg) {
+                const infowindow = new google.maps.InfoWindow({
+                    content: msg,
+                });
+                marker.addListener("click", () => {
+                    infowindow.open({
+                        anchor: marker,
+                        map,
+                        shouldFocus: false,
+                    });
+                });
+            }
+            function initMap() {
+                map = new google.maps.Map(document.getElementById("map"), {
+                    center: { lat: 0, lng: 0 },
+                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+                    zoom: 3,
+                });
+
+                const params = new Proxy(new URLSearchParams(window.location.search), {
+                    get: (searchParams, prop) => searchParams.get(prop),
+                });
+                
+                axios.get(`http://${window.location.host}/data/json`, { headers: {
+                        'Content-Type': 'application/octet-stream', 
+                        'Access-Control-Allow-Origin': `${window.location.host}`,
+                        'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Authorization, Accept',
+                    } })
+                    .then((res) => {
+                        const data = JSON.parse('['+res.data.replaceAll('}{', '},{')+']')
+                        data.forEach(pos => {
+                            const [x, y]= pos.geo[0].location.split(',');
+                            const marker = new google.maps.Marker({
+                                position: { lat: parseInt(x), lng: parseInt(y) },
+                                map,
+                                clickable: true,
+                                title: pos.geo[0].more,
+                            });
+                            infobull(marker, pos.geo[0].more)
+                        })
+                    })
+                    .catch(function (error) {
+                        console.log(error)
+                    });
+            }
+        </script>
+    </head>
+    <body>
+        <div id="map"></div>
+        <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
+        <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBK8Zw9ZlWUFSrgM9bBYDpZvYg6YU3_Jb8&callback=initMap&v=weekly"
+        async
+        ></script>
+    </body>
+</html>

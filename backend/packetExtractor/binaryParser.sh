@@ -3,7 +3,7 @@ ids=$(uuidgen)
 dts=$(date +%m_%d_%Y)
 mkdir -p /tmp/location/$(dts)
 touch /tmp/location/$(dts)/$(ids).txt
-for data in `cat $(ls $file_to | grep -v pcap) | xxd -p -r`;
+for data in `echo $1 | xxd -p -r`;
 do
     typestr=`echo $data | xxd -p -r | chardetect3 /dev/stdin 2>/dev/null | xargs -i echo {} | awk '{ print $2 }' | sed -E s/no\|empty/UNICODE/g`;
     deep-translator --source "auto" --target "en" --tex "$(echo $data | iconv -c -f $typestr -t utf-8 -s 2>/dev/null | iconv -c -f unicode -t BIG5-HKSCS -s 2>/dev/null | iconv -c -f unicode -t utf-8 -s 2>/dev/null)" 2>/dev/null | grep "Translation result: " | cut -d ':' -f2 | trans :en -b -e aspell | od -An -tx1 -v | xxd -p -r >> /tmp/data_translated; #location/$(dts)/$(ids).txt

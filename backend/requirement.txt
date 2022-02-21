@@ -16,6 +16,7 @@ redis-py-cluster
 python-dotenv
 chardet
 requests
+deep-translator
 
 Flask-SocketIO==4.3.1
 python-engineio==3.13.2
