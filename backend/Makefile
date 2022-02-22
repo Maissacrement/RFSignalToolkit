@@ -35,15 +35,15 @@ tag-version:
 	@echo 'create tag $(VERSION)'
 	@docker tag $(APP_NAME) $(REGISTRY):$(VERSION)
 
-push: login build tag-version tag-latest
+git:
+	@git add .
+	@git commit -m "$${msg:-"Up to date"}"
+	@git push
+
+push: git login build tag-version tag-latest
 	@echo 'publish $(VERSION) to $(DOCKER_REPO)'
 	@docker push $(REGISTRY):$(VERSION)
 	@docker push $(REGISTRY):latest
-
-git:
-	@git add .
-	@git commit -m "$$msg"
-	@git push
 
 ${APP_NAME}: build start
 ${APP_NAME}_dev: build reload
