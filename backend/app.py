@@ -48,9 +48,9 @@ def extractor(dumplist):
     try:
         for i in range(int(len(dumplist) / count)):
             dump=" ".join(dumplist[i*count:(1+i)*count])
-            #os.system("{}/packetExtractor/script.sh ".format(os.getcwd()) + str(dump))
             packet=subprocess.run(["{}/packetExtractor/script.sh".format(os.getcwd()), str(dump) ], stdout=subprocess.PIPE)
             if packet.returncode == 0:
+                print(str(packet.stdout))
                 yield bytes(str(packet.stdout).encode('utf-8'))
         """
         for i in range(int(len(dumplist) / count)):

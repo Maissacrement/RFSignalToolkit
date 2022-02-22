@@ -2,21 +2,18 @@
 
 DOCKER:=@docker
 APP_NAME=radio
-VERSION=1.0.8
+VERSION=1.0.9
 REGISTRY=registry.gitlab.com/maissacrement/radio
 
 env:=.env
 include $(env)
 
 login:
-	${DOCKER} login
+	${DOCKER} login registry.gitlab.com
 
 app:
 	python3 app.py &>/dev/null &
 	tail -f ./debug.json
-
-login:
-	${DOCKER} login registry.gitlab.com
 
 build:
 	${DOCKER} build -t ${APP_NAME} .
@@ -42,6 +39,11 @@ push: login build tag-version tag-latest
 	@echo 'publish $(VERSION) to $(DOCKER_REPO)'
 	@docker push $(REGISTRY):$(VERSION)
 	@docker push $(REGISTRY):latest
+
+git:
+	@git add .
+	@git commit -m "$$msg"
+	@git push
 
 ${APP_NAME}: build start
 ${APP_NAME}_dev: build reload

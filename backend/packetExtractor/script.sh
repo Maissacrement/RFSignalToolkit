@@ -12,12 +12,13 @@ function main () {
     text2pcap -d $1 $1.pcap 2>/dev/null;
     cat /tmp/set.pcap | mergecap -I all -a -w /tmp/set.pcap $1.pcap - 2>/dev/null;
     #tshark -2 -V -Nn -T ek 
-    tshark -2 -r $1.pcap -V -T ek -Y \
+    tshark -2 -r /tmp/set.pcap -r $1.pcap -V -T ek -Y \
         "(frame.protocols!=eth:ethertype:data and \
         frame.protocols!=eth:llc:data and \
         frame.protocols!=eth:data) or \
         (eth.src.oui_resolved or eth.src.oui_resolved)" \
-    2>/dev/null;
+    2>/dev/null | grep -v index;
+    rm -vf $1.pcap;
 }
 
 if [ $# -le 1 ];
