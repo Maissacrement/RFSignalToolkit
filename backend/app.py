@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+from dataclasses import replace
 from flask_cors import CORS,cross_origin
 from flask import Flask, Response, request, render_template, send_from_directory
 from flask.helpers import safe_join
+from nbformat import write
 import requests
 
 from core.analyse import Analyse
@@ -20,6 +23,10 @@ import pandas as pd
 import sys
 import subprocess
 from dotenv import load_dotenv
+from core.Translator.DeeplAPI import Deepl
+from deep_translator import GoogleTranslator
+import gettext
+import hexdump
 
 # Load dotenv
 load_dotenv()
@@ -29,12 +36,12 @@ PORT=os.getenv('PORT')
 
 # SIGNAL FREQUENCY TYPE
 signalRange={
-  'bluetooth': [.00001, .00002, .0001, 2400, 2483.5, 60000, 200000, 600000],
-  'wimax': [10000, 66000, 2000, 11000],
-  'lorawan': [433.05, 434.79, 863, 870, 902.3, 914.9],
-  'wifi': [900, 2.4 * (10**3), 3.6 * (10**3), 4.9 * (10**3), 5 * (10**3), 5.9 * (10**3), 6 * (10**3), 60 * (10**3)],
-  'manet': [300  * (10**3)],
-  'other': [9.20  * (10**3)]
+  #'bluetooth': [.00001, .00002, .0001, 2400, 2483.5, 60000, 200000, 600000],
+  #'wimax': [10000, 66000, 2000, 11000],
+  #'lorawan': [433.05, 434.79, 863, 870, 902.3, 914.9],
+  'wifi': [2.4 * (10**3), 5 * (10**3), 60 * (10**3)],
+  #'manet': [300  * (10**3)],
+  #'other': [9.20  * (10**3)]
 }
 
 wireless=[]
@@ -43,25 +50,48 @@ wireless=[]
 def extractor(dumplist):
     dumplist=[ *filter(lambda x: len(x.strip()) != 0, dumplist) ]
     MTU=1125# 1125 octet --> 9000 byte Jumbo ?
-    count=int(len(dumplist)/MTU)
+    count=int(len(dumplist)//MTU)
+    count=count if count != 0 else 1
     print('searching..')
     try:
+        text=''
         for i in range(int(len(dumplist) / count)):
-            dump=" ".join(dumplist[i*count:(1+i)*count])
-            packet=subprocess.run(["{}/packetExtractor/script.sh".format(os.getcwd()), str(dump) ], capture_output=True)
-            print(packet)
-            if packet.returncode == 0:
+            dump="".join(dumplist[i*count:(1+i)*count])
+            sentence=''.join([ bytes.fromhex(dump[x:x+4]).decode('big5', 'replace').encode('iso-8859-15', 'replace').decode('utf-8', 'replace') for x in range(int(len(dump) / 4)) ])
+            text+='\n' + sentence
+
+        cutw=1000
+        text=" ".join(text)
+        print(text)
+        exit(0)
+        #import pycipher
+        #for k in range(0,26):
+        #    tr=pycipher.Caesar(k).decipher(text)
+        #    print(tr if tr.__contains__('HK') and tr.__contains__('OR') and tr.__contains__('WHAT') else None)
+        tmp=''
+        for i in range(int(len(text) / cutw)):
+            sentence=gettext.gettext(text[i*cutw:(i+1)*cutw:1])
+            try:
+                sentence = GoogleTranslator(source='auto', target='en').translate(sentence)
+            except:
+                sliceto=int(len(sentence)//8)
+                for j in range(sliceto):
+                    sentence = GoogleTranslator(source='auto', target='en').translate(sentence[j*sliceto:(j+1)*sliceto])
+            sentence=Deepl().translate(str(sentence))
+            tmp+=sentence
+            print(tmp)
+
+        sentence=hexdump.hexdump(tmp.encode('utf-8'), result='return')
+        with open('./res', 'ab+') as res:
+            res.write(bytes('{}\n*\n'.format(sentence).encode('utf-8')))
+        res.close()
+        packet=subprocess.run(["{}/packetExtractor/packet.sh".format(os.getcwd()) ], stdout=subprocess.PIPE)
+        if packet.returncode == 0:
+            if len(packet.stdout):
+                print(packet.stdout)
                 yield bytes(str(packet.stdout).encode('utf-8'))
-        """
-        for i in range(int(len(dumplist) / count)):
-            dump=" ".join(dumplist[i*count:(1+i)*count])
-            packet=subprocess.run(["{}/packetExtractor/script.sh".format(os.getcwd()), str(dump) ], stdout=subprocess.PIPE)
-            if packet.returncode == 0:
-                if (i == count -2): yield bytes(str(packet.stdout).encode('utf-8'))
-        """
+                
     finally:
-        #subprocess.run(["{}/packetExtractor/binaryParser.sh &".format(os.getcwd())])
-        #subprocess.run(["{}/packetExtractor/iptracker.sh &".format(os.getcwd())])
         print("End")
 
 def iptrack():

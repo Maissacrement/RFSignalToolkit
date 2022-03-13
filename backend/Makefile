@@ -2,7 +2,7 @@
 
 DOCKER:=@docker
 APP_NAME=radio
-VERSION=1.0.10
+VERSION=1.0.19
 REGISTRY=registry.gitlab.com/maissacrement/radio
 
 env:=.env
@@ -40,7 +40,7 @@ git:
 	@git commit -m "$${msg:-"Up to date"}"
 	@git push
 
-push: git login build tag-version tag-latest
+push: login build tag-version tag-latest
 	@echo 'publish $(VERSION) to $(DOCKER_REPO)'
 	@docker push $(REGISTRY):$(VERSION)
 	@docker push $(REGISTRY):latest

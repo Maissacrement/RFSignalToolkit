@@ -24,3 +24,4 @@ python-socketio==4.6.0
 jupyter
 PyJWT==2.3.0
 jwt
+pip install pycipher
