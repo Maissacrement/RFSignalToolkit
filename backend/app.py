@@ -63,6 +63,7 @@ def extractor(dumplist):
         cutw=1000
         text=" ".join(text)
         print(text)
+        print(hexdump.hexdump(text.encode('utf-8'), result='return'))
         exit(0)
         #import pycipher
         #for k in range(0,26):
