@@ -74,7 +74,7 @@ class Analyse:
             x['frequency'].append(el[1])
 
         x['pure']=np.abs(x['signal'])
-        x['signal']=np.fft.fft(np.abs(x['signal']))
+        x['signal']=np.fft.fft(np.abs(x['signal']))-np.abs(x['signal']) # Experimental
         return x 
 
     
@@ -125,9 +125,9 @@ class Analyse:
         Change Radio Fm station
         Fm station in hertz
     """
-    def changeFrequency(self, Fm=60): # 5.0 mhz
+    def changeFrequency(self, Fm=60, freqType='mhz'): # 5.0 mhz
         pound={ "khz": (10**3), "mhz": (10**6), "ghz": (10**9) }
-        Fm=Fm*pound['mhz']
+        Fm=Fm*pound[freqType]
         B=self.getMagneticFieldNormal()
         sig=self.getSignalFrom(B, Fm*10)
         if type(sig["signal"]) != type(None):

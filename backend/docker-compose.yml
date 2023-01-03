@@ -4,7 +4,32 @@ services:
   radio:
     env_file:
       - ./.env
-    build:
-      context: ./
+    #build:
+    #  context: ./
+    links:
+      - tracker:tracker
+    networks:
+      cluster:
+        ipv4_address: 172.56.20.20
+    environment:
+      - TRACKER_URL=http://172.56.20.188:7070
+    image: registry.gitlab.com/maissacrement/radio:1.0.11
     ports:
       - 5000:5000
+  
+  tracker:
+    image: registry.gitlab.com/maissacrement/tracker:latest
+    ports:
+      - "7070:7070"
+    networks:
+      cluster:
+        ipv4_address: 172.56.20.188
+    environment:
+      - PORT=7070
+
+networks:
+  cluster:
+    ipam:
+      config:
+        - subnet: 172.56.20.0/24
+          gateway: 172.56.20.1

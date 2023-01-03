@@ -1,0 +1,2 @@
+typestr=`echo $1 | chardetect /dev/stdin 2>/dev/null | xargs -i echo {} | awk '{ print $2 }' | sed -E s/no\|empty/UNICODE/g`;
+deep-translator --source "auto" --target "fr" --tex $(echo $1 | recode --sequence=memory -f $typestr)

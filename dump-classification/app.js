@@ -19,7 +19,6 @@ const model = (number) => number > 6
 
 const training = (numb) => {
   const num = parseInt(numb)
-
   // Trainning Model
   train(dataset)
   if (![].concat(datastruct['moreThan'], datastruct['minusThan']).includes(num)) train([num])
