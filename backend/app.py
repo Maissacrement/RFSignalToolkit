@@ -75,7 +75,6 @@ def extractor(dumplist):
         cutw=1000
         regex0=r'[a-zA-Z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ\'\.\,]'
         text=' '.join([*filter(lambda x: x, re.split(regex0, text)) ])
-        print(text)
 
         #print(text)
         #print(hexdump.hexdump(text.encode('utf-8'), result='return'))
