@@ -196,5 +196,10 @@ def push():
         'magnet': [magnet(req, mode = 'w' if i == 0 else 'a', filename='./radio.csv') for i, req in enumerate(request.get_json())],
     })
 
+@app.route('/hello/dynmagnet', methods=['POST'])
+def push2():
+
+
+
 if __name__ == "__main__":
     app.run(debug=True, use_reloader=True, host=HOST, port=PORT)
