@@ -22,7 +22,7 @@ else
     mkdir -p ./dumps;
     for dump in $@;do
         /usr/bin/env echo ${dump} | xxd -p -r | od -Ax -tx1 -v | text2pcap i4 -d ${fileid} ${fileid}.pcap 2>/dev/null
-        tshark -r ${fileid}.pca -V -T ek -Y \
+        tshark -r ${fileid}.pcap -V -T ek -Y \
         "(frame.protocols!=eth:ethertype:data and \
         frame.protocols!=eth:llc:data and \
         frame.protocols!=eth:data) or \

@@ -12,7 +12,7 @@ I transform the oem field values in space to normal at time:
  
 I used this normal as amblitude
  
-I make a fourrier analysis `f(A)=A*e**(dtfpi)`: [here](https://github.com/Maissacrement/RFSignalToolkit/blob/main)
+I make a fourrier analysis `f(A)=A*e**(dt*f*pi)`: [here](https://github.com/Maissacrement/RFSignalToolkit/blob/main)
 
  
 Signal is quantified in my CAN proportionnally at amplitude peak (1111) F

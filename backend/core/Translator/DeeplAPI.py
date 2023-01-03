@@ -19,9 +19,9 @@ class Deepl():
 
         return requests.get(link)
 
-    def translate(self, txt, language='en'):
+    def translate(self, txt, language='fr'):
         postData = {
-            'text' : txt, 'auth_key': DEEPL_KEY,
+            'text' : txt, 'auth_key': '16ee3099-d38a-4b50-594b-fce1d74b0132',
             'target_lang': language, 'source_lang': 'zh'
         }
 
@@ -30,7 +30,6 @@ class Deepl():
                 'https://api.deepl.com/v2/translate', data=postData
             )
 
-            #print(response.__dict__)
             if response.status_code == 200:
                 data = json.loads(response.text)
                 return data['translations'][0]['text']
