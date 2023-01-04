@@ -37,3 +37,13 @@ This is the first period treated
 So we have our first one element of our dump
 The strongest intensity value is therefore the reference for proportionally deducing the other values
 Then I process the dump that I shift over time under .pcap with tshark in json
+
+## HOW THIS WORK
+
+First select [frequency](https://github.com/Maissacrement/RFSignalToolkit/blob/main/backend/app.py#L168).
+
+From [Main](https://github.com/Maissacrement/RFSignalToolkit/blob/main/backend/core/analyse.py#L135) we need to get [Magnetic field Normal](https://github.com/Maissacrement/RFSignalToolkit/blob/main/backend/core/analyse.py#L91). In second time, transform signal into a  [complex](https://github.com/Maissacrement/RFSignalToolkit/blob/main/backend/core/analyse.py#L136) from frequency before a [fft](https://github.com/Maissacrement/RFSignalToolkit/blob/main/backend/core/analyse.py#L41). Get windowed data [cut](https://github.com/Maissacrement/RFSignalToolkit/blob/main/backend/core/analyse.py#L41).
+Return [filtered data](https://github.com/Maissacrement/RFSignalToolkit/blob/main/backend/core/analyse.py#L41).
+
+Init [CAN](https://github.com/Maissacrement/RFSignalToolkit/blob/main/backend/app.py#L170)
+Convert data float into [hex dump](https://github.com/Maissacrement/RFSignalToolkit/blob/main/backend/app.py#L171). Convert hex dump in [ascii](https://github.com/Maissacrement/RFSignalToolkit/blob/main/backend/app.py#L175)
