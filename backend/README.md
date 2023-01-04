@@ -28,4 +28,15 @@ Python
 ```bash
 python3 app.py
 ```
+
+### Presentation
+
+
+![My animated logo](./asset/architect.drawio.png)
+
+
+![My animated logo](./asset/Diagramme.drawio.png)
+
+## Magnet receive frame
+
 ![My animated logo](./asset/index.jpeg)

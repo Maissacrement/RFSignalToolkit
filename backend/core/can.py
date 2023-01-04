@@ -6,13 +6,13 @@ class CAN:
         self.signal = []
 
     """
-        Arrondi 
+        Round to the higher bit after analysis of the discrete values. 
     """
     def r0(self, number):
         return ceil(number) if number > int(number) + .75 and int(number) < 15 else floor(number)
 
     """
-        Convertisseur analogique to numerique (Y)
+        ADC: Transformation of the signal into a digital value
     """
     def can(self, nbit=16, In=[8.5,9,50,7,9]):
         nbit = (nbit / max(In)) if max(In) > np.abs(min(In)) else (nbit / -max(In))
