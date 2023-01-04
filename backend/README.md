@@ -31,9 +31,12 @@ python3 app.py
 
 ### Presentation
 
+The main api will receive the information from the phone or other sour sdr and convert it to hexadecimal format. This is a standard used to observe files stored in memory.
 
 ![My animated logo](./asset/architect.drawio.png)
 
+The Analysis class will group all our mathematical functions applied to signal processing.
+So let's say we are going to focus on the quantization of this signal in CAN
 
 ![My animated logo](./asset/Diagramme.drawio.png)
 
