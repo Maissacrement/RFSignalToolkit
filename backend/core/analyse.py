@@ -133,7 +133,7 @@ class Analyse:
         pound={ "khz": (10**3), "mhz": (10**6), "ghz": (10**9) }
         Fm=Fm*pound[freqType]
         B=self.getMagneticFieldNormal()
-        sig=self.getSignalFrom(B, Fm*10)
+        sig=self.getSignalFrom(B, Fm*2)
         if type(sig["signal"]) != type(None):
             signal=sig.get('signal')
             freq=sig.get('frequency')

@@ -42,13 +42,14 @@ signalRange={
   #'lorawan': [433.05, 434.79, 863, 870, 902.3, 914.9],
   #'wifi': [2.4 * (10**3), 5 * (10**3), 60 * (10**3)],
   #'other': [9.20  * (10**3)],
-  'manet': [433  * (10**3)],
+  #'manet': [433  * (10**3)],
   #'MICS_Band': [402 * (100**6), 405 * (100**6)],
   #'HBC_Band': [5 * (100**6), 50 * (100**6)],
   #'WMTS_Band': [863 * (100**6), 870 * (100**6)],
   #'Narrowband': [2360 * (100**6), 2400 * (100**6)],
   #'World_Wide': [2400 * (100**6), 2450 * (100**6)],
   #'UWB_Band': [3100 * (100**6), 10600 * (100**6)],
+  'nrf': [2476]
 
 
 }
@@ -157,6 +158,7 @@ def dyns():
     dumpShiftedLeft=[]
     i = 2400
     df=convertToMagnet(request.get_json())
+    df.to_csv('out.zip', index=False) 
     sig=[]
 
     # Search from frequency range 1000000000 hertz to 900000000000 hertz
@@ -166,6 +168,7 @@ def dyns():
         #analyse.provideDataset(False, df[j:]) if len(df[j:]) < MTU else analyse.provideDataset(False, df[j:j+MTU])
         analyse.provideDataset(False, df)
         signal = analyse.changeFrequency( FREQUENCY )
+        signal[1].tofile('data2.csv', sep = ',')
         if signal:
             numericalAnalysis=CAN()
             s=numericalAnalysis.qbits(numericalAnalysis.can(15, signal[1].real))
@@ -195,11 +198,6 @@ def push():
     return json.dumps({
         'magnet': [magnet(req, mode = 'w' if i == 0 else 'a', filename='./radio.csv') for i, req in enumerate(request.get_json())],
     })
-
-@app.route('/hello/dynmagnet', methods=['POST'])
-def push2():
-
-
 
 if __name__ == "__main__":
     app.run(debug=True, use_reloader=True, host=HOST, port=PORT)
