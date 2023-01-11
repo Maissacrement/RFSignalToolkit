@@ -76,13 +76,6 @@ def extractor(dumplist):
         cutw=1000
         regex0=r'[a-zA-Z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ\'\.\,]'
         text=' '.join([*filter(lambda x: x, re.split(regex0, text)) ])
-
-        #print(text)
-        #print(hexdump.hexdump(text.encode('utf-8'), result='return'))
-        #import pycipher
-        #for k in range(0,26):
-        #    tr=pycipher.Caesar(k).decipher(text)
-        #    print(tr if tr.__contains__('HK') and tr.__contains__('OR') and tr.__contains__('WHAT') else None)
         tmp=''
         for i in range(int(len(text) / cutw)):
             sentence=gettext.gettext(text[i*cutw:(i+1)*cutw:1])
@@ -97,15 +90,6 @@ def extractor(dumplist):
             tmp=' '.join([*filter(lambda x: x, re.split(regex0, sentence)) ])
             sentence=hexdump.hexdump(tmp.encode('utf-8'), result='return')
             print(tmp)
-            
-        
-        """
-        packet=subprocess.run(["{}/packetExtractor/packet.sh".format(os.getcwd()) ], stdout=subprocess.PIPE)
-        if packet.returncode == 0:
-            if len(packet.stdout):
-                #print(packet.stdout)
-                yield bytes(str(packet.stdout).encode('utf-8'))
-        """
                 
     finally:
         print("End")
@@ -158,14 +142,11 @@ def dyns():
     dumpShiftedLeft=[]
     i = 2400
     df=convertToMagnet(request.get_json())
-    df.to_csv('out.zip', index=False) 
     sig=[]
 
     # Search from frequency range 1000000000 hertz to 900000000000 hertz
     for FREQUENCY in wireless:
         print('[APP]: is running for {} Mhz'.format(FREQUENCY))
-        #for j in range(1):
-        #analyse.provideDataset(False, df[j:]) if len(df[j:]) < MTU else analyse.provideDataset(False, df[j:j+MTU])
         analyse.provideDataset(False, df)
         signal = analyse.changeFrequency( FREQUENCY )
         signal[1].tofile('data2.csv', sep = ',')
@@ -178,23 +159,9 @@ def dyns():
                 dumpShiftedLeft+=[p] +[ ''.join([ hex(int(p[x:x+2], 16) ^ i)[2:] for x in range(int(len(p) / 2)) ]) for i in range(127) ]
 
     return Response(extractor(dumpShiftedLeft), mimetype="application/json")
-                    
-
-    #else:
-    #    return json.dumps({ "state": "null" })
 
 @app.route('/magnet', methods=['POST'])
 def push():
-    #analyse = Analyse()
-    #udp=UdPAnalyser()
-    #analyse.provideDataset(os.getcwd() +'/json/radio.csv')
-    #signal = analyse.changeFrequency(30)
-    #s=''
-    #if signal:
-    #    numericalAnalysis=CAN()
-    #    signal=[numericalAnalysis.can(16, signal[1].real), numericalAnalysis.can(16, signal[1].imag)]
-    #    s=numericalAnalysis.qbits(signal[0])
-
     return json.dumps({
         'magnet': [magnet(req, mode = 'w' if i == 0 else 'a', filename='./radio.csv') for i, req in enumerate(request.get_json())],
     })
