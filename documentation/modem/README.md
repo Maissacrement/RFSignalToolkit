@@ -5,10 +5,13 @@ modulation scheme with its on special characteristics, in which the scheme is ca
 
 ## The what
 Chirp is a signal whose frequency changes over time. In the general complex plane, chirp can be provided as:
+
 $$
     x(t) = Ae^{j\theta (t)}
 $$
+
 Hence, the **instantaneous frequency** of chirp signal at time $t$ becomes:
+
 $$
     f(t) = \frac{1}{2\pi}\frac{d\theta(t)}{dt}
 $$
