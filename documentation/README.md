@@ -44,28 +44,18 @@ Here u can found fourrier analysis [here](https://github.com/Maissacrement/RFSig
 
 ## Analog to digital converter (ADC, DAC)
 
-Identify peak from time signal. Signal is quantified in my CAN proportionnally at amplitude peak (1111) F
+Identify the peak from the signal: 1111 or F. The signal is quantized proportionally in frequency in numerical value.
+I identify in my step value the one that repeats the most for one unit of the chosen sampling period.
+The element repeated the most times in the sample becomes the maximum value of the right bit.
+  Use them as a reference value to quantize the other signals (1111). F => F+F => 1111 1111
 
-After that i identify in my step value the one that is repeated the most. Using them as refered value to quantify the other (1111). F => F+F => 1111 1111
  
 <img 
   src="../backend/asset/codage.png"
-  style="height:100px;width:auto;"
+  style="height:autopx;width:100%;"
 />
  
-Knowing that the signal obtained is represented in this way
- 
-(Time can, Intensity can)
-(1111 1111) ---> 0F
-
-Knowing that the signal obtained is represented by this We have therefore recovered a data element
-To do the time can we refer to the number of times that an intensity value is repeated, i.e. the number of frequency periods. We then have:
- 
-(1111 1111) --> FF
-This is the first period treated
-So we have our first one element of our dump
-The strongest intensity value is therefore the reference for proportionally deducing the other values
-Then I process the dump that I shift over time under .pcap with tshark in json
+Then I process the dump that I shift in time under .pcap with tshark in json
 
 ## HOW THIS WORK
 
