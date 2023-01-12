@@ -20,9 +20,11 @@ Here u can found the [Normal](https://github.com/Maissacrement/RFSignalToolkit/b
 
 ## Fourrier analysis
 
+
 $$
     X(f)=B*e^{-j*t*f*pi}
 $$
+
 
 Here u can found fourrier analysis [here](https://github.com/Maissacrement/RFSignalToolkit/blob/main/backend/core/analyse.py#L41)
 
