@@ -32,6 +32,17 @@ You can find the python function for fourier transform [here](https://github.com
 
 ### ASK
 
+Digital signal can be modulated with this the help ASK technique. The modulation scheme works based on the following formula:
+
+
+$$
+   s(t)= a*sin(2\pi f_{c}t);\ \ \ if bit = 1\\ 
+$$
+
+$$
+    s(t) = 0 ;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \  \ \ \ \ if bit = 0
+$$
+
 Amplitude Shift Keying (ASK) signal can be demodulated and digital data can be extracted from it based on the folling FSK demodulation scheme.
 
 <img 
@@ -40,6 +51,17 @@ Amplitude Shift Keying (ASK) signal can be demodulated and digital data can be e
 />
 
 ### FSK
+
+In FSK, different carrier frequency waves are used to transmit digital 1 bit and digital 0 bit. Mathematically, it can be shown by the following equation:
+ 
+$$
+s(t) = a*sin(2\pi f_{c1}t);\ \ \ if bit = 1\\ 
+$$
+
+$$
+s(t) = a*sin(2\pi f_{c2}t); \ \ \ if bit = 0
+$$
+
 Frequency Shift Keying (ASK) signal can be demodulated and digital data can be extracted from it based on the folling FSK demodulation scheme.
 
 <img 
@@ -48,6 +70,15 @@ Frequency Shift Keying (ASK) signal can be demodulated and digital data can be e
 />
 
 ### PSK
+In PSK scheme, the phase of the carrier wave get shifted by pi for bit 1 and bit 0. Mathematically, it can be shows the following equation: 
+
+$$
+s(t) = a*sin(2\pi f_{c}t);\ \ \ if bit = 1\\ 
+$$
+
+$$
+s(t) = a*sin(2\pi f_{c}t+\pi ); \ \ \ if bit = 0
+$$
 
 Phase Shift Keying (ASK) signal can be demodulated and digital data can be extracted from it based on the folling PSK demodulation scheme.
 
