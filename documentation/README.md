@@ -1,10 +1,9 @@
 # Descrption of Our Goal
 
 ```bash
-requirement: Fourrier, Laplace, biot & savart, magnetism.
+requirement: Fourrier Transform, Laplace Transfrom, biot & savart, magnetism.
  ```
-
-Using is smartphone magnet sensor B(x, y, z) [Radio](https://github.com/Maissacrement/RFSignalToolkit/blob/main/backend/radio.csv)
+In this project we are using a Smartphone Magnetic Sensor B(x, y, z) [Radio](https://github.com/Maissacrement/RFSignalToolkit/blob/main/backend/radio.csv)
 
 
 ## Get signal indication (rssi, power, direction)
@@ -15,7 +14,7 @@ $$
     B(t)=\sqrt{Bx(t)^2+By(t)^2+Bz(t)^2}
 $$ 
  
-Here u can found the [Normal](https://github.com/Maissacrement/RFSignalToolkit/blob/main/backend/core/analyse.py#L91). This normal is used as amplitude.
+With the help of above formula, you can find the magnitude of Magnetic field [[here]](https://github.com/Maissacrement/RFSignalToolkit/blob/main/backend/core/analyse.py#L91).
 
 
 ## Fourrier analysis
@@ -26,22 +25,36 @@ $$
 $$
 
 
-Here u can found fourrier analysis [here](https://github.com/Maissacrement/RFSignalToolkit/blob/main/backend/core/analyse.py#L41)
+You can find the python function for fourier transform [here](https://github.com/Maissacrement/RFSignalToolkit/blob/main/backend/core/analyse.py#L41)
 
 
 ## Demodulation
 
 ### ASK
 
-...
+Amplitude Shift Keying (ASK) signal can be demodulated and digital data can be extracted from it based on the folling FSK demodulation scheme.
+
+<img 
+  src="../backend/asset/ask_demodulation.png"
+  style="height:autopx;width:100%;"
+/>
 
 ### FSK
+Frequency Shift Keying (ASK) signal can be demodulated and digital data can be extracted from it based on the folling FSK demodulation scheme.
 
-...
+<img 
+  src="../backend/asset/fsk_demodulation_1.png"
+  style="height:autopx;width:100%;"
+/>
 
 ### PSK
 
-...
+Phase Shift Keying (ASK) signal can be demodulated and digital data can be extracted from it based on the folling PSK demodulation scheme.
+
+<img 
+  src="../backend/asset/psk_demodulation.png"
+  style="height:autopx;width:100%;"
+/>
 
 ## Analog to digital converter (ADC, DAC)
 
@@ -60,10 +73,17 @@ Then I process the dump that I shift in time under .pcap with tshark in json
 
 ## HOW THIS WORK
 
-First select [frequency](https://github.com/Maissacrement/RFSignalToolkit/blob/main/backend/app.py#L168).
+1. First select [frequency](https://github.com/Maissacrement/RFSignalToolkit/blob/main/backend/app.py#L168).
 
-From [Main](https://github.com/Maissacrement/RFSignalToolkit/blob/main/backend/core/analyse.py#L135) we need to get [Magnetic field Normal](https://github.com/Maissacrement/RFSignalToolkit/blob/main/backend/core/analyse.py#L91). In second time, transform signal into a  [complex](https://github.com/Maissacrement/RFSignalToolkit/blob/main/backend/core/analyse.py#L136) from frequency before a [fft](https://github.com/Maissacrement/RFSignalToolkit/blob/main/backend/core/analyse.py#L41). Get windowed data [cut](https://github.com/Maissacrement/RFSignalToolkit/blob/main/backend/core/analyse.py#L41).
-Return [filtered data](https://github.com/Maissacrement/RFSignalToolkit/blob/main/backend/core/analyse.py#L41).
+2. From [Main](https://github.com/Maissacrement/RFSignalToolkit/blob/main/backend/core/analyse.py#L135) 
 
-Init [CAN](https://github.com/Maissacrement/RFSignalToolkit/blob/main/backend/app.py#L170)
-Convert data float into [hex dump](https://github.com/Maissacrement/RFSignalToolkit/blob/main/backend/app.py#L171). Convert hex dump in [ascii](https://github.com/Maissacrement/RFSignalToolkit/blob/main/backend/app.py#L175)
+    2.1.  First we need to get the Magnetic Field Magnitude[(Normal)](https://github.com/Maissacrement/RFSignalToolkit/blob/main/backend/core/analyse.py#L91).
+
+    2.2.  Second, transform signal into a  [complex](https://github.com/Maissacrement/RFSignalToolkit/blob/main/backend/core/analyse.py#L136) frequency form before computing the [fft](https://github.com/Maissacrement/RFSignalToolkit/blob/main/backend/core/analyse.py#L41). 
+    
+    2.3. Get windowed data [cut](https://github.com/Maissacrement/RFSignalToolkit/blob/main/backend/core/analyse.py#L41).
+
+    2.4. Finally, Return the [filtered data](https://github.com/Maissacrement/RFSignalToolkit/blob/main/backend/core/analyse.py#L41).
+
+3. Init [CAN](https://github.com/Maissacrement/RFSignalToolkit/blob/main/backend/app.py#L170)
+to Convert data from float into [hex dump](https://github.com/Maissacrement/RFSignalToolkit/blob/main/backend/app.py#L171). Then Convert hex dump into [ascii](https://github.com/Maissacrement/RFSignalToolkit/blob/main/backend/app.py#L175) data format.
