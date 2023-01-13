@@ -9,7 +9,7 @@ Using is smartphone magnet sensor B(x, y, z) [Radio](https://github.com/Maissacr
 
 ## Get signal indication (rssi, power, direction)
 
-## Compute magnetique field
+## Compute Magnitude of the magnetic field
 
 $$
     B(t)=\sqrt{Bx(t)^2+By(t)^2+Bz(t)^2}
@@ -22,7 +22,7 @@ Here u can found the [Normal](https://github.com/Maissacrement/RFSignalToolkit/b
 
 
 $$
-    X(f)=B*e^{-j*t*f*pi}
+    x(f) = \int_{-\infty }^{\infty}x(t)e^{-j2\pi ft}dt
 $$
 
 
